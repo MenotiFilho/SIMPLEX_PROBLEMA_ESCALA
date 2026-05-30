@@ -72,6 +72,17 @@ A API ficará disponível em:
 http://localhost:8080
 ```
 
+## Rodar a API sem banco
+
+Para testar os endpoints sem subir o PostgreSQL, use o profile `api-demo`:
+
+```bash
+cd backend/escalaSimplex
+./mvnw spring-boot:run -Dspring-boot.run.profiles=api-demo
+```
+
+Esse profile mantém a API web ativa em `http://localhost:8080`, mas desativa a configuração de DataSource e Hibernate. Ele é útil enquanto os endpoints recebem o cenário completo no JSON e ainda não precisam persistir dados.
+
 ## Endpoints principais
 
 ### Resolver cenário
@@ -156,3 +167,11 @@ backend/escalaSimplex/src/main/resources/application-demo.properties
 ```
 
 Ela desativa a aplicação web e a configuração de banco para permitir rodar apenas o exemplo de terminal.
+
+A configuração do modo API sem banco está em:
+
+```text
+backend/escalaSimplex/src/main/resources/application-api-demo.properties
+```
+
+Ela desativa DataSource e Hibernate, mas mantém o servidor web na porta `8080`.
