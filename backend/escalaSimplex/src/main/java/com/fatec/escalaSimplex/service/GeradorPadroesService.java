@@ -6,7 +6,6 @@ import com.fatec.escalaSimplex.domain.RegraTrabalhoFolga;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -23,18 +22,26 @@ public class GeradorPadroesService {
                 .toList();
 
         int n = periodosOrdenados.size();
-        int quantidadePadroes = regra.circular()
-                ? n
-                : n - (regra.periodosTrabalhados() + regra.periodosFolga()) + 1;
+        int tamanhoCiclo = regra.periodosTrabalhados() + regra.periodosFolga();
+
+        int quantidadePadroes = definirQuantidadePadroes(n, tamanhoCiclo, regra.circular());
 
         List<PadraoEscala> padroes = new ArrayList<>();
 
-        for (int inicioFolga = 0; inicioFolga < quantidadePadroes; inicioFolga++) {
-            List<Integer> trabalhaPorPeriodo = gerarVetorTrabalho(n, inicioFolga, regra);
-            String nome = gerarNomePadrao(periodosOrdenados, inicioFolga, regra);
+        for (int inicioTrabalho = 0; inicioTrabalho < quantidadePadroes; inicioTrabalho++) {
+            List<Integer> trabalhaPorPeriodo = gerarVetorTrabalho(
+                    n,
+                    inicioTrabalho,
+                    regra
+            );
+
+            String nome = gerarNomePadrao(
+                    periodosOrdenados,
+                    trabalhaPorPeriodo
+            );
 
             padroes.add(new PadraoEscala(
-                    "x" + (inicioFolga + 1),
+                    "x" + (inicioTrabalho + 1),
                     nome,
                     trabalhaPorPeriodo
             ));
@@ -43,23 +50,37 @@ public class GeradorPadroesService {
         return padroes;
     }
 
+    private int definirQuantidadePadroes(
+            int quantidadePeriodos,
+            int tamanhoCiclo,
+            boolean circular
+    ) {
+        if (!circular) {
+            return quantidadePeriodos;
+        }
+
+        if (quantidadePeriodos % tamanhoCiclo == 0) {
+            return tamanhoCiclo;
+        }
+
+        return quantidadePeriodos;
+    }
+
     private List<Integer> gerarVetorTrabalho(
             int quantidadePeriodos,
-            int inicioFolga,
+            int inicioTrabalho,
             RegraTrabalhoFolga regra
     ) {
-        List<Integer> vetor = new ArrayList<>(Collections.nCopies(quantidadePeriodos, 1));
+        List<Integer> vetor = new ArrayList<>();
 
-        for (int i = 0; i < regra.periodosFolga(); i++) {
-            int indice = inicioFolga + i;
+        int tamanhoCiclo = regra.periodosTrabalhados() + regra.periodosFolga();
 
-            if (regra.circular()) {
-                indice = indice % quantidadePeriodos;
-            }
+        for (int indicePeriodo = 0; indicePeriodo < quantidadePeriodos; indicePeriodo++) {
+            int deslocamento = Math.floorMod(indicePeriodo - inicioTrabalho, tamanhoCiclo);
 
-            if (indice < quantidadePeriodos) {
-                vetor.set(indice, 0);
-            }
+            boolean trabalha = deslocamento < regra.periodosTrabalhados();
+
+            vetor.add(trabalha ? 1 : 0);
         }
 
         return vetor;
@@ -67,23 +88,16 @@ public class GeradorPadroesService {
 
     private String gerarNomePadrao(
             List<PeriodoEscala> periodos,
-            int inicioFolga,
-            RegraTrabalhoFolga regra
+            List<Integer> trabalhaPorPeriodo
     ) {
-        List<String> nomesFolga = new ArrayList<>();
+        List<String> nomesTrabalho = new ArrayList<>();
 
-        for (int i = 0; i < regra.periodosFolga(); i++) {
-            int indice = inicioFolga + i;
-
-            if (regra.circular()) {
-                indice = indice % periodos.size();
-            }
-
-            if (indice < periodos.size()) {
-                nomesFolga.add(periodos.get(indice).nome());
+        for (int i = 0; i < periodos.size(); i++) {
+            if (trabalhaPorPeriodo.get(i) == 1) {
+                nomesTrabalho.add(periodos.get(i).nome());
             }
         }
 
-        return "Folga " + String.join("-", nomesFolga);
+        return "Trabalha " + String.join(", ", nomesTrabalho);
     }
 }

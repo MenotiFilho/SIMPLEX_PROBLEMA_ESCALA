@@ -6,6 +6,7 @@ import com.fatec.escalaSimplex.domain.PeriodoEscala;
 import com.fatec.escalaSimplex.domain.RegraTrabalhoFolga;
 import com.fatec.escalaSimplex.domain.ResultadoOtimizacao;
 import com.fatec.escalaSimplex.service.GeradorPadroesService;
+import com.fatec.escalaSimplex.service.SolverEscalaInteiroService;
 import com.fatec.escalaSimplex.service.SolverEscalaService;
 import com.fatec.escalaSimplex.service.ValidadorCenarioService;
 import org.jspecify.annotations.NonNull;
@@ -20,20 +21,24 @@ public class InitialProblemRunner implements CommandLineRunner {
     private final ValidadorCenarioService validadorCenarioService;
     private final GeradorPadroesService geradorPadroesService;
     private final SolverEscalaService solverEscalaService;
+    private final SolverEscalaInteiroService solverEscalaInteiroService;
 
     public InitialProblemRunner(
             ValidadorCenarioService validadorCenarioService,
             GeradorPadroesService geradorPadroesService,
-            SolverEscalaService solverEscalaService
+            SolverEscalaService solverEscalaService,
+            SolverEscalaInteiroService solverEscalaInteiroService
     ) {
         this.validadorCenarioService = validadorCenarioService;
         this.geradorPadroesService = geradorPadroesService;
         this.solverEscalaService = solverEscalaService;
+        this.solverEscalaInteiroService = solverEscalaInteiroService;
     }
 
     @Override
     public void run(String @NonNull ... args) {
         CenarioEscala cenario = criarCenarioLclOriginal();
+        //CenarioEscala cenario = criarCenario12x36();
 
         validadorCenarioService.validar(cenario);
 
@@ -44,9 +49,14 @@ public class InitialProblemRunner implements CommandLineRunner {
 
         imprimirPadroes(padroes);
 
-        ResultadoOtimizacao resultado = solverEscalaService.resolver(cenario, padroes);
+        ResultadoOtimizacao resultadoContinuo = solverEscalaService.resolver(cenario, padroes);
+        ResultadoOtimizacao resultadoInteiro = solverEscalaInteiroService.resolver(cenario, padroes);
 
-        imprimirResultado(resultado);
+        System.out.println("\n=== RESULTADO CONTÍNUO - SIMPLEX/GLOP ===");
+        imprimirResultado(resultadoContinuo);
+
+        System.out.println("\n=== RESULTADO INTEIRO - MIP/SCIP ===");
+        imprimirResultado(resultadoInteiro);
     }
 
     private CenarioEscala criarCenarioLclOriginal() {
@@ -110,5 +120,25 @@ public class InitialProblemRunner implements CommandLineRunner {
 
         System.out.println("\nModelo matemático:");
         System.out.println(resultado.modeloMatematico());
+    }
+    private CenarioEscala criarCenario12x36() {
+        return new CenarioEscala(
+                "Escala 12x36 - exemplo",
+                "Cenário com períodos de 12 horas em escala 12x36.",
+                List.of(
+                        new PeriodoEscala(1L, "Segunda 07h-19h", 1, 4, true),
+                        new PeriodoEscala(2L, "Segunda 19h-07h", 2, 2, true),
+
+                        new PeriodoEscala(3L, "Terça 07h-19h", 3, 5, true),
+                        new PeriodoEscala(4L, "Terça 19h-07h", 4, 2, true),
+
+                        new PeriodoEscala(5L, "Quarta 07h-19h", 5, 4, true),
+                        new PeriodoEscala(6L, "Quarta 19h-07h", 6, 3, true),
+
+                        new PeriodoEscala(7L, "Quinta 07h-19h", 7, 5, true),
+                        new PeriodoEscala(8L, "Quinta 19h-07h", 8, 2, true)
+                ),
+                new RegraTrabalhoFolga(1, 3, true)
+        );
     }
 }
