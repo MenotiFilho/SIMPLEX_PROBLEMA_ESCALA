@@ -12,10 +12,12 @@ import com.fatec.escalaSimplex.service.ValidadorCenarioService;
 import org.jspecify.annotations.NonNull;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Profile;
 
 import java.util.List;
 
 @Component
+@Profile("demo")
 public class InitialProblemRunner implements CommandLineRunner {
 
     private final ValidadorCenarioService validadorCenarioService;
