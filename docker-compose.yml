@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: escalas-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: escalas_db
+      POSTGRES_USER: escalas_user
+      POSTGRES_PASSWORD: escalas_pass
+    ports:
+      - "5431:5432"
+    volumes:
+      - escalas_postgres_data:/var/lib/postgresql/data
+
+volumes:
+  escalas_postgres_data:
