@@ -157,6 +157,7 @@ export default function CenarioForm() {
         </div>
 
         {/* Dashboard de Resultados */}
+        {/* Dashboard de Resultados */}
         {resultadoOtimizacao && (
           <div className="bg-white rounded-2xl shadow-xl overflow-hidden border-t-8 border-green-500">
             <div className="p-8">
@@ -176,7 +177,7 @@ export default function CenarioForm() {
                 <div className="bg-blue-50 border border-blue-100 p-6 rounded-xl shadow-sm flex flex-col justify-center">
                   <p className="text-sm font-bold text-blue-600 uppercase tracking-widest mb-1">Total de Funcionários (Z)</p>
                   <p className="text-5xl font-black text-blue-900">
-                    {resultadoOtimizacao.z !== undefined ? resultadoOtimizacao.z : resultadoOtimizacao.objectiveValue}
+                    {resultadoOtimizacao.zAproximado}
                   </p>
                 </div>
               </div>
@@ -202,8 +203,8 @@ export default function CenarioForm() {
                         <tbody className="divide-y divide-gray-100">
                           {resultadoOtimizacao.padroes.map((padrao, index) => (
                             <tr key={index} className="hover:bg-gray-50">
-                              <td className="px-4 py-3 font-medium text-gray-900">{padrao.nome || padrao.variableName}</td>
-                              <td className="px-4 py-3 font-bold text-blue-600 text-right">{padrao.quantidade || padrao.value}</td>
+                              <td className="px-4 py-3 font-medium text-gray-900">{padrao.nome}</td>
+                              <td className="px-4 py-3 font-bold text-blue-600 text-right">{padrao.quantidadeAproximada}</td>
                             </tr>
                           ))}
                         </tbody>
@@ -232,10 +233,10 @@ export default function CenarioForm() {
                         <tbody className="divide-y divide-gray-100">
                           {resultadoOtimizacao.cobertura.map((dia, index) => (
                             <tr key={index} className="hover:bg-gray-50">
-                              <td className="px-4 py-3 font-bold text-gray-900">{dia.dia}</td>
+                              <td className="px-4 py-3 font-bold text-gray-900">{dia.periodo}</td>
                               <td className="px-4 py-3 text-gray-600 text-center">{dia.demandaMinima}</td>
-                              <td className="px-4 py-3 font-bold text-green-600 text-center">{dia.atendidos}</td>
-                              <td className="px-4 py-3 font-medium text-orange-500 text-right">+{dia.sobra}</td>
+                              <td className="px-4 py-3 font-bold text-green-600 text-center">{dia.atendidosAproximado}</td>
+                              <td className="px-4 py-3 font-medium text-orange-500 text-right">+{dia.sobraAproximada}</td>
                             </tr>
                           ))}
                         </tbody>
