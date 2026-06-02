@@ -1,11 +1,23 @@
 package com.fatec.escalaSimplex.dto.request;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+
 import java.util.List;
 
 public record CenarioRequest(
+        @NotBlank(message = "O nome do cenário é obrigatório.")
         String nome,
+
         String descricao,
-        List<PeriodoRequest> periodos,
+
+        @NotEmpty(message = "O cenário deve possuir ao menos um período.")
+        List<@Valid PeriodoRequest> periodos,
+
+        @NotNull(message = "A regra de trabalho e folga é obrigatória.")
+        @Valid
         RegraTrabalhoFolgaRequest regraTrabalhoFolga
 ) {
 }

@@ -11,6 +11,7 @@ import com.google.ortools.linearsolver.MPConstraint;
 import com.google.ortools.linearsolver.MPObjective;
 import com.google.ortools.linearsolver.MPSolver;
 import com.google.ortools.linearsolver.MPVariable;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -18,9 +19,13 @@ import java.util.Comparator;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class SolverEscalaService {
 
     private static final double EPSILON = 0.000001;
+
+    private final CoberturaService coberturaService;
+    private final ModeloMatematicoService modeloMatematicoService;
 
     public ResultadoOtimizacao resolver(
             CenarioEscala cenario,
@@ -69,13 +74,16 @@ public class SolverEscalaService {
 
         List<ResultadoPadrao> resultadoPadroes = montarResultadoPadroes(padroes, variaveis);
 
-        List<CoberturaPeriodo> cobertura = calcularCobertura(
+        List<CoberturaPeriodo> cobertura = coberturaService.calcularContinua(
                 periodosAtivosOrdenados,
                 padroes,
                 variaveis
         );
 
-        String modeloMatematico = gerarModeloMatematico(periodosAtivosOrdenados, padroes);
+        String modeloMatematico = modeloMatematicoService.gerarContinuo(
+                periodosAtivosOrdenados,
+                padroes
+        );
 
         int zAproximado = resultadoPadroes.stream()
                 .mapToInt(ResultadoPadrao::quantidadeAproximada)
@@ -169,102 +177,6 @@ public class SolverEscalaService {
         }
 
         return resultado;
-    }
-
-    private List<CoberturaPeriodo> calcularCobertura(
-            List<PeriodoEscala> periodos,
-            List<PadraoEscala> padroes,
-            MPVariable[] variaveis
-    ) {
-        List<CoberturaPeriodo> cobertura = new ArrayList<>();
-
-        for (int indicePeriodo = 0; indicePeriodo < periodos.size(); indicePeriodo++) {
-            PeriodoEscala periodo = periodos.get(indicePeriodo);
-
-            double atendidosContinuo = 0.0;
-            int atendidosAproximado = 0;
-
-            for (int indicePadrao = 0; indicePadrao < padroes.size(); indicePadrao++) {
-                int trabalha = padroes.get(indicePadrao)
-                        .trabalhaPorPeriodo()
-                        .get(indicePeriodo);
-
-                double valorContinuo = limparErroNumerico(variaveis[indicePadrao].solutionValue());
-                int valorAproximado = aproximarParaCimaSePositivo(valorContinuo);
-
-                atendidosContinuo += trabalha * valorContinuo;
-                atendidosAproximado += trabalha * valorAproximado;
-            }
-
-            atendidosContinuo = limparErroNumerico(atendidosContinuo);
-
-            double sobraContinua = limparErroNumerico(
-                    atendidosContinuo - periodo.demandaMinima()
-            );
-
-            int sobraAproximada = atendidosAproximado - periodo.demandaMinima();
-
-            cobertura.add(new CoberturaPeriodo(
-                    periodo.nome(),
-                    periodo.demandaMinima(),
-                    atendidosContinuo,
-                    sobraContinua,
-                    atendidosAproximado,
-                    sobraAproximada
-            ));
-        }
-
-        return cobertura;
-    }
-
-    private String gerarModeloMatematico(
-            List<PeriodoEscala> periodos,
-            List<PadraoEscala> padroes
-    ) {
-        StringBuilder modelo = new StringBuilder();
-
-        modelo.append("Min Z = ");
-
-        for (int i = 0; i < padroes.size(); i++) {
-            if (i > 0) {
-                modelo.append(" + ");
-            }
-
-            modelo.append(padroes.get(i).variavel());
-        }
-
-        modelo.append("\n\nSujeito a:\n");
-
-        for (int indicePeriodo = 0; indicePeriodo < periodos.size(); indicePeriodo++) {
-            PeriodoEscala periodo = periodos.get(indicePeriodo);
-
-            modelo.append(periodo.nome()).append(": ");
-
-            boolean primeiro = true;
-
-            for (PadraoEscala padrao : padroes) {
-                int trabalha = padrao.trabalhaPorPeriodo().get(indicePeriodo);
-
-                if (trabalha == 1) {
-                    if (!primeiro) {
-                        modelo.append(" + ");
-                    }
-
-                    modelo.append(padrao.variavel());
-                    primeiro = false;
-                }
-            }
-
-            modelo.append(" >= ").append(periodo.demandaMinima()).append("\n");
-        }
-
-        modelo.append("\n");
-
-        for (PadraoEscala padrao : padroes) {
-            modelo.append(padrao.variavel()).append(" >= 0\n");
-        }
-
-        return modelo.toString();
     }
 
     private int aproximarParaCimaSePositivo(double valor) {

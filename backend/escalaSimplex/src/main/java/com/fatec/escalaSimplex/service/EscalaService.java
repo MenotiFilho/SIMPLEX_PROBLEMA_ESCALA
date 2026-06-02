@@ -3,26 +3,18 @@ package com.fatec.escalaSimplex.service;
 import com.fatec.escalaSimplex.domain.CenarioEscala;
 import com.fatec.escalaSimplex.domain.PadraoEscala;
 import com.fatec.escalaSimplex.domain.ResultadoOtimizacao;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class EscalaService {
 
     private final ValidadorCenarioService validadorCenarioService;
     private final GeradorPadroesService geradorPadroesService;
     private final SolverEscalaService solverEscalaService;
-
-    public EscalaService(
-            ValidadorCenarioService validadorCenarioService,
-            GeradorPadroesService geradorPadroesService,
-            SolverEscalaService solverEscalaService
-    ) {
-        this.validadorCenarioService = validadorCenarioService;
-        this.geradorPadroesService = geradorPadroesService;
-        this.solverEscalaService = solverEscalaService;
-    }
 
     public List<PadraoEscala> preVisualizarPadroes(CenarioEscala cenario) {
         validadorCenarioService.validar(cenario);
