@@ -53,6 +53,7 @@ public class CenarioCrudService {
 
         CenarioEntity entity = buscarEntityPorId(id);
         cenarioMapper.atualizarEntity(entity, request);
+        entity.setSolucaoOtimizacao(null);
         CenarioEntity atualizado = cenarioRepository.saveAndFlush(entity);
 
         return cenarioMapper.toResponse(atualizado);

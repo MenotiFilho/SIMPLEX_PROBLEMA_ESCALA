@@ -2,7 +2,9 @@ package com.fatec.escalaSimplex.controller;
 
 import com.fatec.escalaSimplex.dto.request.CenarioRequest;
 import com.fatec.escalaSimplex.dto.response.CenarioResponse;
+import com.fatec.escalaSimplex.domain.ResultadoOtimizacao;
 import com.fatec.escalaSimplex.service.CenarioCrudService;
+import com.fatec.escalaSimplex.service.SolucaoOtimizacaoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
@@ -28,6 +30,7 @@ import java.util.List;
 public class EscalaController {
 
     private final CenarioCrudService cenarioCrudService;
+    private final SolucaoOtimizacaoService solucaoOtimizacaoService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -57,5 +60,15 @@ public class EscalaController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletar(@PathVariable Long id) {
         cenarioCrudService.deletar(id);
+    }
+
+    @PostMapping("/{id}/solve")
+    public ResultadoOtimizacao resolverOuBuscarSolucaoSalva(@PathVariable Long id) {
+        return solucaoOtimizacaoService.resolverOuBuscarSalva(id);
+    }
+
+    @GetMapping("/{id}/solution")
+    public ResultadoOtimizacao buscarSolucaoSalva(@PathVariable Long id) {
+        return solucaoOtimizacaoService.buscarSalva(id);
     }
 }

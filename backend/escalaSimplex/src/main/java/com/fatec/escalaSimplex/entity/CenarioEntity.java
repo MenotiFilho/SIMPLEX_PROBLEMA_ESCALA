@@ -41,6 +41,9 @@ public class CenarioEntity {
     @OneToOne(mappedBy = "cenario", cascade = CascadeType.ALL, orphanRemoval = true)
     private RegraTrabalhoFolgaEntity regraTrabalhoFolga;
 
+    @OneToOne(mappedBy = "cenario", cascade = CascadeType.ALL, orphanRemoval = true)
+    private SolucaoOtimizacaoEntity solucaoOtimizacao;
+
     public void setPeriodos(List<PeriodoEntity> periodos) {
         this.periodos.clear();
 
@@ -58,6 +61,18 @@ public class CenarioEntity {
 
         if (regraTrabalhoFolga != null) {
             regraTrabalhoFolga.setCenario(this);
+        }
+    }
+
+    public void setSolucaoOtimizacao(SolucaoOtimizacaoEntity solucaoOtimizacao) {
+        if (this.solucaoOtimizacao != null) {
+            this.solucaoOtimizacao.setCenario(null);
+        }
+
+        this.solucaoOtimizacao = solucaoOtimizacao;
+
+        if (solucaoOtimizacao != null) {
+            solucaoOtimizacao.setCenario(this);
         }
     }
 
