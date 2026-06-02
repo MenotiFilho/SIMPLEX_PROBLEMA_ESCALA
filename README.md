@@ -81,32 +81,82 @@ cd backend/escalaSimplex
 ./mvnw spring-boot:run -Dspring-boot.run.profiles=api-demo
 ```
 
-Esse profile mantém a API web ativa em `http://localhost:8080`, mas desativa a configuração de DataSource e Hibernate. Ele é útil enquanto os endpoints recebem o cenário completo no JSON e ainda não precisam persistir dados.
+Esse profile mantém a API web ativa em `http://localhost:8080`, mas desativa a configuração de DataSource e Hibernate. Ele é útil para testar endpoints que recebem o cenário completo no JSON, como `/solve` e `/patterns/preview`.
 
 ## Endpoints principais
 
-### Resolver cenário
+### Fluxo oficial do frontend
+
+O fluxo recomendado para o frontend é sempre trabalhar com cenários salvos:
+
+```text
+1. Salvar cenário
+2. Resolver pelo id do cenário
+3. Reabrir a solução salva quando a página for recarregada
+```
+
+Endpoints usados pelo frontend:
 
 ```http
-POST /api/v1/scenarios/solve
+GET    /api/v1/scenarios
+POST   /api/v1/scenarios
+GET    /api/v1/scenarios/{id}
+PUT    /api/v1/scenarios/{id}
+DELETE /api/v1/scenarios/{id}
+
+POST   /api/v1/scenarios/{id}/solve
+GET    /api/v1/scenarios/{id}/solution
+```
+
+O endpoint `POST /api/v1/scenarios/solve` continua disponível para teste/desenvolvimento com JSON avulso, mas o frontend deve preferir `POST /api/v1/scenarios/{id}/solve`.
+
+### Modelo de request de cenário
+
+Usado em `POST /api/v1/scenarios`, `PUT /api/v1/scenarios/{id}`, `POST /api/v1/scenarios/solve` e `POST /api/v1/scenarios/patterns/preview`:
+
+```json
+{
+  "nome": "Semana comum LCL",
+  "descricao": "Cenário com 7 períodos diários.",
+  "periodos": [
+    { "nome": "Segunda", "ordem": 1, "demandaMinima": 18, "ativo": true },
+    { "nome": "Terça", "ordem": 2, "demandaMinima": 12, "ativo": true },
+    { "nome": "Quarta", "ordem": 3, "demandaMinima": 15, "ativo": true },
+    { "nome": "Quinta", "ordem": 4, "demandaMinima": 19, "ativo": true },
+    { "nome": "Sexta", "ordem": 5, "demandaMinima": 14, "ativo": true },
+    { "nome": "Sábado", "ordem": 6, "demandaMinima": 16, "ativo": true },
+    { "nome": "Domingo", "ordem": 7, "demandaMinima": 11, "ativo": true }
+  ],
+  "regraTrabalhoFolga": {
+    "periodosTrabalhados": 5,
+    "periodosFolga": 2,
+    "circular": true
+  }
+}
+```
+
+### Criar cenário
+
+```http
+POST /api/v1/scenarios
 ```
 
 Exemplo com `curl`:
 
 ```bash
-curl -X POST http://localhost:8080/api/v1/scenarios/solve \
+curl -X POST http://localhost:8080/api/v1/scenarios \
   -H "Content-Type: application/json" \
   -d '{
     "nome": "Semana comum LCL",
     "descricao": "Cenario com 7 periodos diarios.",
     "periodos": [
-      { "id": 1, "nome": "Segunda", "ordem": 1, "demandaMinima": 18, "ativo": true },
-      { "id": 2, "nome": "Terca", "ordem": 2, "demandaMinima": 12, "ativo": true },
-      { "id": 3, "nome": "Quarta", "ordem": 3, "demandaMinima": 15, "ativo": true },
-      { "id": 4, "nome": "Quinta", "ordem": 4, "demandaMinima": 19, "ativo": true },
-      { "id": 5, "nome": "Sexta", "ordem": 5, "demandaMinima": 14, "ativo": true },
-      { "id": 6, "nome": "Sabado", "ordem": 6, "demandaMinima": 16, "ativo": true },
-      { "id": 7, "nome": "Domingo", "ordem": 7, "demandaMinima": 11, "ativo": true }
+      { "nome": "Segunda", "ordem": 1, "demandaMinima": 18, "ativo": true },
+      { "nome": "Terca", "ordem": 2, "demandaMinima": 12, "ativo": true },
+      { "nome": "Quarta", "ordem": 3, "demandaMinima": 15, "ativo": true },
+      { "nome": "Quinta", "ordem": 4, "demandaMinima": 19, "ativo": true },
+      { "nome": "Sexta", "ordem": 5, "demandaMinima": 14, "ativo": true },
+      { "nome": "Sabado", "ordem": 6, "demandaMinima": 16, "ativo": true },
+      { "nome": "Domingo", "ordem": 7, "demandaMinima": 11, "ativo": true }
     ],
     "regraTrabalhoFolga": {
       "periodosTrabalhados": 5,
@@ -116,13 +166,135 @@ curl -X POST http://localhost:8080/api/v1/scenarios/solve \
   }'
 ```
 
+Resposta:
+
+```json
+{
+  "id": 1,
+  "nome": "Semana comum LCL",
+  "descricao": "Cenario com 7 periodos diarios.",
+  "periodos": [
+    { "id": 1, "nome": "Segunda", "ordem": 1, "demandaMinima": 18, "ativo": true }
+  ],
+  "regraTrabalhoFolga": {
+    "id": 1,
+    "periodosTrabalhados": 5,
+    "periodosFolga": 2,
+    "circular": true
+  }
+}
+```
+
+### Listar cenários
+
+```http
+GET /api/v1/scenarios
+```
+
+Retorna todos os cenários salvos.
+
+### Buscar cenário por id
+
+```http
+GET /api/v1/scenarios/{id}
+```
+
+Exemplo:
+
+```http
+GET /api/v1/scenarios/1
+```
+
+### Atualizar cenário
+
+```http
+PUT /api/v1/scenarios/{id}
+```
+
+Use o mesmo corpo JSON de criação.
+
+Quando um cenário é atualizado, a solução salva anterior é apagada automaticamente, porque pode não representar mais o cenário atual.
+
+### Excluir cenário
+
+```http
+DELETE /api/v1/scenarios/{id}
+```
+
+Exemplo:
+
+```http
+DELETE /api/v1/scenarios/1
+```
+
+Retorna `204 No Content`.
+
+### Resolver cenário salvo
+
+```http
+POST /api/v1/scenarios/{id}/solve
+```
+
+Exemplo:
+
+```http
+POST /api/v1/scenarios/1/solve
+```
+
+Comportamento:
+
+- Se o cenário ainda não tem solução salva, o backend resolve com Simplex/GLOP, salva a solução no banco e retorna o resultado.
+- Se o cenário já tem solução salva, o backend retorna a solução salva sem resolver novamente.
+
+### Buscar solução salva
+
+```http
+GET /api/v1/scenarios/{id}/solution
+```
+
+Exemplo:
+
+```http
+GET /api/v1/scenarios/1/solution
+```
+
+Se existir solução salva, retorna:
+
+```json
+{
+  "status": "OPTIMAL",
+  "zContinuo": 22.6666666667,
+  "zAproximado": 24,
+  "padroes": [],
+  "cobertura": [],
+  "modeloMatematico": "Min Z = ..."
+}
+```
+
+Se não existir solução salva:
+
+```json
+{
+  "code": "RECURSO_NAO_ENCONTRADO",
+  "message": "Solução não encontrada para este cenário."
+}
+```
+
+### Resolver JSON avulso
+
+```http
+POST /api/v1/scenarios/solve
+```
+
+Esse endpoint resolve um cenário enviado diretamente no corpo da requisição e não salva o cenário nem a solução. Use apenas para teste ou desenvolvimento.
+
 ### Pre-visualizar padrões
 
 ```http
 POST /api/v1/scenarios/patterns/preview
 ```
 
-Use o mesmo corpo JSON do endpoint `/solve`. Esse endpoint retorna apenas os padrões gerados, sem resolver a otimização.
+Use o mesmo corpo JSON de criação. Esse endpoint retorna apenas os padrões gerados, sem resolver a otimização e sem salvar dados no banco.
 
 ## Rodar testes
 
