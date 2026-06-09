@@ -56,7 +56,7 @@ export default function ResultadoOtimizacao({ resultado }) {
                 <table className="w-full text-left text-sm">
                   <thead className="bg-slate-50 text-slate-700">
                     <tr>
-                      <th className="px-3 py-2 font-semibold">Regra</th>
+                      <th className="px-3 py-2 font-semibold">Periodos em que trabalha</th>
                       <th className="px-3 py-2 text-right font-semibold">Alocados</th>
                     </tr>
                   </thead>
