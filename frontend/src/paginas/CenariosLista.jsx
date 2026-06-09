@@ -73,19 +73,6 @@ export default function CenariosLista() {
     }
   };
 
-  const handleResolver = async (cenario) => {
-    try {
-      setResolvendoId(cenario.id);
-      setErro('');
-      const resultado = await resolverCenario(cenario.id);
-      navigate(`/cenarios/${cenario.id}`, { state: { resultado } });
-    } catch (error) {
-      setErro(error.message);
-    } finally {
-      setResolvendoId(null);
-    }
-  };
-
   const abrirModalCriacao = () => {
     setNomeNovo('');
     setDescricaoNova('');
@@ -199,14 +186,7 @@ export default function CenariosLista() {
                         >
                           Abrir
                         </Link>
-                        <button
-                          type="button"
-                          onClick={() => handleResolver(cenario)}
-                          disabled={resolvendoId === cenario.id}
-                          className="rounded-md border border-blue-200 bg-blue-50 px-3 py-2 font-semibold text-blue-700 transition hover:bg-blue-100 disabled:cursor-not-allowed disabled:opacity-60"
-                        >
-                          {resolvendoId === cenario.id ? 'Resolvendo...' : 'Resolver'}
-                        </button>
+                        
                         <button
                           type="button"
                           onClick={() => handleExcluir(cenario)}
