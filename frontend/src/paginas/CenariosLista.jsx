@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { excluirCenario, listarCenarios, resolverCenario } from '../api/cenarios';
+import { criarCenario, excluirCenario, listarCenarios, resolverCenario } from '../api/cenarios';
+import { criarCenarioVazio } from '../utils/cenarioPayload';
 
 function descreverRegra(cenario) {
   const regra = cenario.regraTrabalhoFolga;
@@ -20,6 +21,10 @@ export default function CenariosLista() {
   const [erro, setErro] = useState('');
   const [excluindoId, setExcluindoId] = useState(null);
   const [resolvendoId, setResolvendoId] = useState(null);
+  const [modalAberto, setModalAberto] = useState(false);
+  const [nomeNovo, setNomeNovo] = useState('');
+  const [descricaoNova, setDescricaoNova] = useState('');
+  const [criando, setCriando] = useState(false);
 
   useEffect(() => {
     let ativo = true;
@@ -81,6 +86,34 @@ export default function CenariosLista() {
     }
   };
 
+  const abrirModalCriacao = () => {
+    setNomeNovo('');
+    setDescricaoNova('');
+    setErro('');
+    setModalAberto(true);
+  };
+
+  const fecharModalCriacao = () => {
+    if (!criando) {
+      setModalAberto(false);
+    }
+  };
+
+  const handleCriar = async (event) => {
+    event.preventDefault();
+
+    try {
+      setCriando(true);
+      setErro('');
+      const cenario = await criarCenario(criarCenarioVazio(nomeNovo.trim(), descricaoNova.trim()));
+      navigate(`/cenarios/${cenario.id}`);
+    } catch (error) {
+      setErro(error.message);
+    } finally {
+      setCriando(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
       <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
@@ -92,12 +125,13 @@ export default function CenariosLista() {
             Gerencie os cenarios salvos e resolva escalas persistidas no banco.
           </p>
         </div>
-        <Link
-          to="/cenarios/novo"
+        <button
+          type="button"
+          onClick={abrirModalCriacao}
           className="inline-flex items-center justify-center rounded-md bg-blue-600 px-5 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-blue-700"
         >
           Novo cenario
-        </Link>
+        </button>
       </header>
 
       {erro && (
@@ -117,12 +151,13 @@ export default function CenariosLista() {
             <p className="mt-2 text-sm text-slate-600">
               Crie o primeiro cenario para salvar, editar e consultar solucoes.
             </p>
-            <Link
-              to="/cenarios/novo"
+            <button
+              type="button"
+              onClick={abrirModalCriacao}
               className="mt-5 inline-flex rounded-md bg-blue-600 px-5 py-3 text-sm font-bold text-white transition hover:bg-blue-700"
             >
               Criar cenario
-            </Link>
+            </button>
           </div>
         ) : (
           <div className="overflow-x-auto">
@@ -187,6 +222,64 @@ export default function CenariosLista() {
           </div>
         )}
       </section>
+
+      {modalAberto && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/50 px-4">
+          <div className="w-full max-w-lg rounded-lg bg-white shadow-xl">
+            <div className="border-b border-slate-200 px-6 py-4">
+              <h2 className="text-xl font-extrabold text-slate-950">Novo cenario</h2>
+              <p className="mt-1 text-sm text-slate-600">
+                Informe os dados iniciais. O cenario sera criado zerado para edicao.
+              </p>
+            </div>
+
+            <form onSubmit={handleCriar} className="space-y-5 p-6">
+              <div>
+                <label className="mb-2 block text-sm font-semibold text-slate-700">
+                  Nome do cenario
+                </label>
+                <input
+                  type="text"
+                  value={nomeNovo}
+                  onChange={(event) => setNomeNovo(event.target.value)}
+                  className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                  autoFocus
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="mb-2 block text-sm font-semibold text-slate-700">
+                  Descricao
+                </label>
+                <textarea
+                  value={descricaoNova}
+                  onChange={(event) => setDescricaoNova(event.target.value)}
+                  className="min-h-24 w-full resize-y rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                />
+              </div>
+
+              <div className="flex flex-col-reverse gap-3 border-t border-slate-200 pt-5 sm:flex-row sm:justify-end">
+                <button
+                  type="button"
+                  onClick={fecharModalCriacao}
+                  disabled={criando}
+                  className="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-bold text-slate-700 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  disabled={criando}
+                  className="rounded-md bg-blue-600 px-5 py-2 text-sm font-bold text-white shadow-sm transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
+                >
+                  {criando ? 'Criando...' : 'Criar e editar'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

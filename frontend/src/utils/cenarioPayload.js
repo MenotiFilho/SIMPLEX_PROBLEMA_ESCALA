@@ -1,21 +1,16 @@
-const PERIODOS_PADRAO = [
-  { nome: 'Segunda', ordem: 1, demandaMinima: 18, ativo: true },
-  { nome: 'Terca', ordem: 2, demandaMinima: 12, ativo: true },
-  { nome: 'Quarta', ordem: 3, demandaMinima: 15, ativo: true },
-  { nome: 'Quinta', ordem: 4, demandaMinima: 19, ativo: true },
-  { nome: 'Sexta', ordem: 5, demandaMinima: 14, ativo: true },
-  { nome: 'Sabado', ordem: 6, demandaMinima: 16, ativo: true },
-  { nome: 'Domingo', ordem: 7, demandaMinima: 11, ativo: true },
+const PERIODOS_INICIAIS = [
+  { nome: 'Periodo 1', ordem: 1, demandaMinima: 0, ativo: true },
+  { nome: 'Periodo 2', ordem: 2, demandaMinima: 0, ativo: true },
 ];
 
-export function criarCenarioPadrao() {
+export function criarCenarioVazio(nome = '', descricao = '') {
   return {
-    nome: 'Escala semanal LCL',
-    descricao: 'Cenario de otimizacao',
-    periodos: PERIODOS_PADRAO.map((periodo) => ({ ...periodo })),
+    nome,
+    descricao,
+    periodos: PERIODOS_INICIAIS.map((periodo) => ({ ...periodo })),
     regraTrabalhoFolga: {
-      periodosTrabalhados: 5,
-      periodosFolga: 2,
+      periodosTrabalhados: 1,
+      periodosFolga: 1,
       circular: true,
     },
   };
@@ -25,7 +20,15 @@ export function normalizarCenario(cenario) {
   return {
     nome: cenario.nome ?? '',
     descricao: cenario.descricao ?? '',
-    periodos: [...(cenario.periodos ?? [])].sort((a, b) => a.ordem - b.ordem),
+    periodos: [...(cenario.periodos ?? [])]
+      .sort((a, b) => a.ordem - b.ordem)
+      .map((periodo, index) => ({
+        id: periodo.id,
+        nome: periodo.nome?.trim() || `Periodo ${index + 1}`,
+        ordem: index + 1,
+        demandaMinima: Number(periodo.demandaMinima) || 0,
+        ativo: periodo.ativo ?? true,
+      })),
     regraTrabalhoFolga: {
       periodosTrabalhados: cenario.regraTrabalhoFolga?.periodosTrabalhados ?? 5,
       periodosFolga: cenario.regraTrabalhoFolga?.periodosFolga ?? 2,
