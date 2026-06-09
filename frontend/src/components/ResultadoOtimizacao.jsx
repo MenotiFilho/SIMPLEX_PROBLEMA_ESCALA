@@ -50,14 +50,14 @@ export default function ResultadoOtimizacao({ resultado }) {
           {resultado.padroes?.length > 0 && (
             <div>
               <h3 className="mb-2 text-sm font-extrabold uppercase tracking-wide text-slate-700">
-                Padroes de alocacao
+                Escalas
               </h3>
               <div className="overflow-hidden rounded-lg border border-slate-200">
                 <table className="w-full text-left text-sm">
                   <thead className="bg-slate-50 text-slate-700">
                     <tr>
                       <th className="px-3 py-2 font-semibold">Regra</th>
-                      <th className="px-3 py-2 text-right font-semibold">Func.</th>
+                      <th className="px-3 py-2 text-right font-semibold">Alocados</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
