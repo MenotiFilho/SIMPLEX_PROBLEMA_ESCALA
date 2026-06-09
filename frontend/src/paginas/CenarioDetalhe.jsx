@@ -10,17 +10,34 @@ import CenarioFormulario from '../components/CenarioFormulario';
 import ResultadoOtimizacao from '../components/ResultadoOtimizacao';
 import { normalizarCenario } from '../utils/cenarioPayload';
 
+function chaveEstrutural(cenario) {
+  const cenarioNormalizado = normalizarCenario(cenario);
+
+  return JSON.stringify({
+    periodos: cenarioNormalizado.periodos,
+    regraTrabalhoFolga: cenarioNormalizado.regraTrabalhoFolga,
+  });
+}
+
+function metadadosMudaram(cenarioAtual, cenarioOriginal) {
+  if (!cenarioAtual || !cenarioOriginal) {
+    return false;
+  }
+
+  return cenarioAtual.nome !== cenarioOriginal.nome || cenarioAtual.descricao !== cenarioOriginal.descricao;
+}
+
 export default function CenarioDetalhe() {
   const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
   const [cenario, setCenario] = useState(null);
+  const [cenarioOriginal, setCenarioOriginal] = useState(null);
   const [resultado, setResultado] = useState(location.state?.resultado ?? null);
   const [carregando, setCarregando] = useState(true);
   const [salvando, setSalvando] = useState(false);
   const [resolvendo, setResolvendo] = useState(false);
   const [erro, setErro] = useState('');
-  const [aviso, setAviso] = useState('');
   const [naoEncontrado, setNaoEncontrado] = useState(false);
 
   useEffect(() => {
@@ -37,7 +54,9 @@ export default function CenarioDetalhe() {
           return;
         }
 
-        setCenario(normalizarCenario(cenarioEncontrado));
+        const cenarioNormalizado = normalizarCenario(cenarioEncontrado);
+        setCenario(cenarioNormalizado);
+        setCenarioOriginal(cenarioNormalizado);
 
         if (!location.state?.resultado) {
           try {
@@ -73,19 +92,18 @@ export default function CenarioDetalhe() {
     };
   }, [id, location.state?.resultado]);
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-
+  const salvarCenario = async () => {
     try {
       setSalvando(true);
       setErro('');
-      setAviso('');
       const atualizado = await atualizarCenario(id, normalizarCenario(cenario));
-      setCenario(normalizarCenario(atualizado));
-      setResultado(null);
-      setAviso('Cenario salvo. A solucao anterior foi invalidada; resolva novamente.');
+      const cenarioNormalizado = normalizarCenario(atualizado);
+      setCenario(cenarioNormalizado);
+      setCenarioOriginal(cenarioNormalizado);
+      return cenarioNormalizado;
     } catch (error) {
       setErro(error.message);
+      return null;
     } finally {
       setSalvando(false);
     }
@@ -95,9 +113,13 @@ export default function CenarioDetalhe() {
     try {
       setResolvendo(true);
       setErro('');
-      setAviso('');
+      const cenarioSalvo = await salvarCenario();
+      if (!cenarioSalvo) {
+        return;
+      }
       const solucao = await resolverCenario(id);
       setResultado(solucao);
+      setCenarioOriginal(cenarioSalvo);
     } catch (error) {
       setErro(error.message);
     } finally {
@@ -107,6 +129,20 @@ export default function CenarioDetalhe() {
 
   const atualizarCampoCenario = (campo, valor) => {
     setCenario((atual) => ({ ...atual, [campo]: valor }));
+  };
+
+  const salvarMetadadosAoSair = async () => {
+    if (!cenarioOriginal) {
+      return;
+    }
+
+    const mudouEstrutura = chaveEstrutural(cenario) !== chaveEstrutural(cenarioOriginal);
+
+    if (mudouEstrutura || !metadadosMudaram(cenario, cenarioOriginal)) {
+      return;
+    }
+
+    await salvarCenario();
   };
 
   if (carregando) {
@@ -135,6 +171,10 @@ export default function CenarioDetalhe() {
     );
   }
 
+  const mudouEstrutura =
+    cenarioOriginal && chaveEstrutural(cenario) !== chaveEstrutural(cenarioOriginal);
+  const deveMostrarAcaoDeResolucao = mudouEstrutura || !resultado;
+
   return (
     <div className="flex h-full min-h-0 flex-col gap-4">
       <header className="shrink-0 rounded-lg border border-slate-200 bg-white px-5 py-4 shadow-sm">
@@ -148,6 +188,7 @@ export default function CenarioDetalhe() {
                 type="text"
                 value={cenario.nome}
                 onChange={(event) => atualizarCampoCenario('nome', event.target.value)}
+                onBlur={salvarMetadadosAoSair}
                 className="w-full rounded-md border border-transparent bg-slate-50 px-3 py-2 text-xl font-extrabold tracking-tight text-slate-950 outline-none transition focus:border-blue-300 focus:bg-white focus:ring-2 focus:ring-blue-100"
                 placeholder="Nome do cenario"
                 required
@@ -161,6 +202,7 @@ export default function CenarioDetalhe() {
                 type="text"
                 value={cenario.descricao}
                 onChange={(event) => atualizarCampoCenario('descricao', event.target.value)}
+                onBlur={salvarMetadadosAoSair}
                 className="w-full rounded-md border border-transparent bg-slate-50 px-3 py-2 text-sm font-medium text-slate-700 outline-none transition focus:border-blue-300 focus:bg-white focus:ring-2 focus:ring-blue-100"
                 placeholder="Descricao do cenario"
               />
@@ -181,33 +223,47 @@ export default function CenarioDetalhe() {
         </div>
       )}
 
-      {aviso && (
-        <div className="shrink-0 rounded-md border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-semibold text-amber-800">
-          {aviso}
-        </div>
-      )}
-
       <div className="grid min-h-0 flex-1 grid-cols-1 grid-rows-[minmax(0,1fr)_minmax(0,1fr)] gap-4 xl:grid-cols-[minmax(520px,0.95fr)_minmax(420px,1.05fr)] xl:grid-rows-1">
         <div className="min-h-0 overflow-y-auto">
           <CenarioFormulario
             cenario={cenario}
             onChange={setCenario}
-            onSubmit={handleSubmit}
-            salvando={salvando}
-            submitLabel="Salvar alteracoes"
-          >
-            <button
-              type="button"
-              onClick={handleResolver}
-              disabled={resolvendo || salvando}
-              className="rounded-md border border-green-200 bg-green-600 px-5 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-green-700 disabled:cursor-not-allowed disabled:bg-green-300"
-            >
-              {resolvendo ? 'Resolvendo...' : 'Resolver cenario'}
-            </button>
-          </CenarioFormulario>
+          />
         </div>
 
         <div className="min-h-0 overflow-y-auto">
+          {deveMostrarAcaoDeResolucao && (
+            <div
+              className={`mb-4 rounded-lg border p-4 ${
+                mudouEstrutura ? 'border-amber-200 bg-amber-50' : 'border-blue-200 bg-blue-50'
+              }`}
+            >
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <p
+                  className={`text-sm font-semibold ${
+                    mudouEstrutura ? 'text-amber-900' : 'text-blue-900'
+                  }`}
+                >
+                  {mudouEstrutura
+                    ? 'O cenario mudou. Resolva novamente para atualizar a solucao.'
+                    : 'Este cenario ainda nao possui solucao salva.'}
+                </p>
+                <button
+                  type="button"
+                  onClick={handleResolver}
+                  disabled={resolvendo || salvando}
+                  className="rounded-md bg-green-600 px-4 py-2 text-sm font-bold text-white shadow-sm transition hover:bg-green-700 disabled:cursor-not-allowed disabled:bg-green-300"
+                >
+                  {resolvendo || salvando
+                    ? 'Atualizando...'
+                    : mudouEstrutura
+                      ? 'Resolver novamente'
+                      : 'Resolver cenario'}
+                </button>
+              </div>
+            </div>
+          )}
+
           {resultado ? (
             <ResultadoOtimizacao resultado={resultado} />
           ) : (
@@ -215,7 +271,7 @@ export default function CenarioDetalhe() {
               <div>
                 <h2 className="text-lg font-extrabold text-slate-900">Sem solucao exibida</h2>
                 <p className="mt-2 max-w-sm text-sm text-slate-600">
-                  Resolva o cenario para consultar alocacao, cobertura e total de funcionarios.
+                  Ajuste regra e periodos para habilitar a resolucao do cenario.
                 </p>
               </div>
             </div>

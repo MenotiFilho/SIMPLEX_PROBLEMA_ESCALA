@@ -1,9 +1,6 @@
 export default function CenarioFormulario({
   cenario,
   onChange,
-  onSubmit,
-  salvando,
-  submitLabel = 'Salvar cenario',
   children,
 }) {
   const presets = {
@@ -113,7 +110,7 @@ export default function CenarioFormulario({
 
   return (
     <div className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
-      <form onSubmit={onSubmit} className="space-y-8 p-6">
+      <form onSubmit={(event) => event.preventDefault()} className="space-y-8 p-6">
         <section>
           <div className="grid grid-cols-1 gap-3 rounded-lg border border-blue-100 bg-blue-50/60 p-4 md:grid-cols-[1fr_1fr_auto] md:items-end">
             <div>
@@ -252,16 +249,11 @@ export default function CenarioFormulario({
           </div>
         </section>
 
-        <div className="flex flex-col gap-3 border-t border-slate-200 pt-5 sm:flex-row sm:items-center sm:justify-end">
-          {children}
-          <button
-            type="submit"
-            disabled={salvando}
-            className="rounded-md bg-blue-600 px-5 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
-          >
-            {salvando ? 'Salvando...' : submitLabel}
-          </button>
-        </div>
+        {children && (
+          <div className="flex flex-col gap-3 border-t border-slate-200 pt-5 sm:flex-row sm:items-center sm:justify-end">
+            {children}
+          </div>
+        )}
       </form>
     </div>
   );
