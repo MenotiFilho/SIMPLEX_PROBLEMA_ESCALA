@@ -28,6 +28,7 @@ public class CenariosSeedRunner implements ApplicationRunner {
         criarSeNaoExistir(criarCenarioBase5x2());
         criarSeNaoExistir(criarCenario12x36());
         criarSeNaoExistir(criarCenario6x1());
+        criarSeNaoExistir(criarCenarioCampanhaNaoCircular());
     }
 
     private void criarSeNaoExistir(CenarioRequest request) {
@@ -85,6 +86,26 @@ public class CenariosSeedRunner implements ApplicationRunner {
                         periodo("Domingo", 7, 8)
                 ),
                 new RegraTrabalhoFolgaRequest(6, 1, true)
+        );
+    }
+
+    private CenarioRequest criarCenarioCampanhaNaoCircular() {
+        return new CenarioRequest(
+                "Caso teste - Campanha temporária 4x2",
+                "Janela finita de 10 dias para campanha temporária. Não circular porque o ciclo não precisa fechar no fim do horizonte.",
+                List.of(
+                        periodo("Dia 1", 1, 6),
+                        periodo("Dia 2", 2, 7),
+                        periodo("Dia 3", 3, 8),
+                        periodo("Dia 4", 4, 8),
+                        periodo("Dia 5", 5, 9),
+                        periodo("Dia 6", 6, 7),
+                        periodo("Dia 7", 7, 6),
+                        periodo("Dia 8", 8, 8),
+                        periodo("Dia 9", 9, 9),
+                        periodo("Dia 10", 10, 5)
+                ),
+                new RegraTrabalhoFolgaRequest(4, 2, false)
         );
     }
 

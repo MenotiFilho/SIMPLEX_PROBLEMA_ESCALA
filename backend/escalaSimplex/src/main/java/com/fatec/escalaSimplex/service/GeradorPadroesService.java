@@ -32,8 +32,13 @@ public class GeradorPadroesService {
             List<Integer> trabalhaPorPeriodo = gerarVetorTrabalho(
                     n,
                     inicioTrabalho,
-                    regra
+                    regra,
+                    regra.circular()
             );
+
+            if (naoTrabalhaEmNenhumPeriodo(trabalhaPorPeriodo)) {
+                continue;
+            }
 
             String nome = gerarNomePadrao(
                     periodosOrdenados,
@@ -48,6 +53,10 @@ public class GeradorPadroesService {
         }
 
         return padroes;
+    }
+
+    private boolean naoTrabalhaEmNenhumPeriodo(List<Integer> trabalhaPorPeriodo) {
+        return trabalhaPorPeriodo.stream().noneMatch(valor -> valor == 1);
     }
 
     private int definirQuantidadePadroes(
@@ -69,16 +78,20 @@ public class GeradorPadroesService {
     private List<Integer> gerarVetorTrabalho(
             int quantidadePeriodos,
             int inicioTrabalho,
-            RegraTrabalhoFolga regra
+            RegraTrabalhoFolga regra,
+            boolean circular
     ) {
         List<Integer> vetor = new ArrayList<>();
 
         int tamanhoCiclo = regra.periodosTrabalhados() + regra.periodosFolga();
 
         for (int indicePeriodo = 0; indicePeriodo < quantidadePeriodos; indicePeriodo++) {
-            int deslocamento = Math.floorMod(indicePeriodo - inicioTrabalho, tamanhoCiclo);
+            int deslocamento = circular
+                    ? Math.floorMod(indicePeriodo - inicioTrabalho, tamanhoCiclo)
+                    : indicePeriodo - inicioTrabalho;
 
-            boolean trabalha = deslocamento < regra.periodosTrabalhados();
+            boolean trabalha = deslocamento >= 0
+                    && Math.floorMod(deslocamento, tamanhoCiclo) < regra.periodosTrabalhados();
 
             vetor.add(trabalha ? 1 : 0);
         }

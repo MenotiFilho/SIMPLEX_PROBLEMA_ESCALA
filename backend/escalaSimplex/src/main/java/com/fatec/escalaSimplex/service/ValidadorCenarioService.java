@@ -69,6 +69,14 @@ public class ValidadorCenarioService {
                     "A soma entre períodos trabalhados e períodos de folga deve ser menor ou igual ao número de períodos ativos."
             );
         }
+
+        int tamanhoCiclo = regra.periodosTrabalhados() + regra.periodosFolga();
+
+        if (regra.circular() && quantidadePeriodosAtivos % tamanhoCiclo != 0) {
+            throw new IllegalArgumentException(
+                    "Para escala circular, a quantidade de períodos ativos deve ser múltipla da soma entre períodos trabalhados e períodos de folga."
+            );
+        }
     }
 
 }

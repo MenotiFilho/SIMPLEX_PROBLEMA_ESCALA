@@ -18,9 +18,15 @@ async function request(path = '', options = {}) {
   const data = contentType.includes('application/json') ? await response.json() : null;
 
   if (!response.ok) {
-    const error = new Error(data?.mensagem ?? 'Nao foi possivel concluir a operacao.');
+    const message =
+      data?.message ??
+      data?.mensagem ??
+      data?.error ??
+      data?.detail ??
+      'Nao foi possivel concluir a operacao.';
+    const error = new Error(message);
     error.status = response.status;
-    error.codigo = data?.codigo;
+    error.codigo = data?.code ?? data?.codigo;
     throw error;
   }
 

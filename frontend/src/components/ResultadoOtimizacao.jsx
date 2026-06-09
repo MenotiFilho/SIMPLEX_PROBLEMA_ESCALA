@@ -23,6 +23,9 @@ export default function ResultadoOtimizacao({ resultado, aviso }) {
 
   const statusExibicao = formatarStatus(resultado.status);
   const solucaoEncontrada = statusExibicao === 'Ótimo';
+  const padroesComAlocados = (resultado.padroes ?? [])/*.filter(
+    (padrao) => (padrao.quantidadeInteira ?? padrao.quantidadeAproximada ?? 0) > 0,
+  )*/;
 
   return (
     <section className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
@@ -59,7 +62,7 @@ export default function ResultadoOtimizacao({ resultado, aviso }) {
         </div>
 
         <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-          {resultado.padroes?.length > 0 && (
+          {padroesComAlocados.length > 0 && (
             <div>
               <h3 className="mb-2 text-sm font-extrabold uppercase tracking-wide text-slate-700">
                 Escalas
@@ -73,7 +76,7 @@ export default function ResultadoOtimizacao({ resultado, aviso }) {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
-                    {resultado.padroes.map((padrao, index) => (
+                    {padroesComAlocados.map((padrao, index) => (
                       <tr key={`${padrao.nome}-${index}`} className="hover:bg-slate-50">
                         <td className="px-3 py-2 font-medium text-slate-900">{padrao.nome}</td>
                         <td className="px-3 py-2 text-right font-bold text-blue-700">

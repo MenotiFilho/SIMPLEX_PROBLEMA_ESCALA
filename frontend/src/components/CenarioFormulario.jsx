@@ -3,6 +3,18 @@ export default function CenarioFormulario({
   onChange,
   children,
 }) {
+  const criarTurnos12x36 = (quantidadeTurnos) =>
+    Array.from({ length: quantidadeTurnos }, (_, index) => {
+      const dia = Math.floor(index / 2) + 1;
+      const horario = index % 2 === 0 ? '07h-19h' : '19h-07h';
+
+      return {
+        nome: `Dia ${dia} ${horario}`,
+        demandaMinima: 0,
+        ativo: true,
+      };
+    });
+
   const presets = {
     semanal: {
       label: 'Semanal 5x2',
@@ -21,14 +33,27 @@ export default function CenarioFormulario({
         circular: true,
       },
     },
-    '12x36': {
-      label: '12x36',
-      periodos: [
-        { nome: 'Turno 1', demandaMinima: 0, ativo: true },
-        { nome: 'Turno 2', demandaMinima: 0, ativo: true },
-        { nome: 'Turno 3', demandaMinima: 0, ativo: true },
-        { nome: 'Turno 4', demandaMinima: 0, ativo: true },
-      ],
+    '12x36-8': {
+      label: '12x36 - 8 turnos',
+      periodos: criarTurnos12x36(8),
+      regraTrabalhoFolga: {
+        periodosTrabalhados: 1,
+        periodosFolga: 3,
+        circular: true,
+      },
+    },
+    '12x36-12': {
+      label: '12x36 - 12 turnos',
+      periodos: criarTurnos12x36(12),
+      regraTrabalhoFolga: {
+        periodosTrabalhados: 1,
+        periodosFolga: 3,
+        circular: true,
+      },
+    },
+    '12x36-28': {
+      label: '12x36 - 28 turnos',
+      periodos: criarTurnos12x36(28),
       regraTrabalhoFolga: {
         periodosTrabalhados: 1,
         periodosFolga: 3,
