@@ -196,7 +196,7 @@ export default function CenarioDetalhe() {
       <header className="shrink-0 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
         
         <div className="flex gap-2 p-4">
-          <div className="flex flex-col">
+          <div className="flex flex-col w-full">
 
               <input
                 type="text"
