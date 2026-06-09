@@ -120,10 +120,10 @@ export default function CenariosLista() {
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <h1 className="text-3xl font-extrabold tracking-tight text-slate-950">
-              Cenarios de escala
+              Cenários de escala
             </h1>
             <p className="mt-1 text-sm text-slate-600">
-              Gerencie os cenarios salvos e resolva escalas persistidas no banco.
+              Gerencie os cenários salvos e resolva escalas persistidas no banco.
             </p>
           </div>
           <button
@@ -131,7 +131,7 @@ export default function CenariosLista() {
             onClick={abrirModalCriacao}
             className="inline-flex items-center justify-center rounded-md bg-blue-600 px-5 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-blue-700"
           >
-            Novo cenario
+            Novo cenário
           </button>
         </div>
       </header>
@@ -145,20 +145,20 @@ export default function CenariosLista() {
       <section className="min-h-0 flex-1 overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
         {carregando ? (
           <div className="p-8 text-center text-sm font-semibold text-slate-500">
-            Carregando cenarios...
+            Carregando cenários...
           </div>
         ) : cenarios.length === 0 ? (
           <div className="p-10 text-center">
-            <h2 className="text-xl font-bold text-slate-900">Nenhum cenario criado</h2>
+            <h2 className="text-xl font-bold text-slate-900">Nenhum cenário criado</h2>
             <p className="mt-2 text-sm text-slate-600">
-              Crie o primeiro cenario para salvar, editar e consultar solucoes.
+              Crie o primeiro cenário para salvar, editar e consultar soluções.
             </p>
             <button
               type="button"
               onClick={abrirModalCriacao}
               className="mt-5 inline-flex rounded-md bg-blue-600 px-5 py-3 text-sm font-bold text-white transition hover:bg-blue-700"
             >
-              Criar cenario
+              Criar cenário
             </button>
           </div>
         ) : (
@@ -167,10 +167,10 @@ export default function CenariosLista() {
               <thead className="sticky top-0 z-10 border-b border-slate-200 bg-slate-50 text-slate-700">
                 <tr>
                   <th className="px-5 py-4 font-bold">Nome</th>
-                  <th className="px-5 py-4 font-bold">Descricao</th>
-                  <th className="px-5 py-4 text-center font-bold">Periodos</th>
+                  <th className="px-5 py-4 font-bold">Descrição</th>
+                  <th className="px-5 py-4 text-center font-bold">Períodos</th>
                   <th className="px-5 py-4 font-bold">Regra</th>
-                  <th className="px-5 py-4 text-right font-bold">Acoes</th>
+                  <th className="px-5 py-4 text-right font-bold">Ações</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
@@ -229,16 +229,16 @@ export default function CenariosLista() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/50 px-4">
           <div className="w-full max-w-lg rounded-lg bg-white shadow-xl">
             <div className="border-b border-slate-200 px-6 py-4">
-              <h2 className="text-xl font-extrabold text-slate-950">Novo cenario</h2>
+              <h2 className="text-xl font-extrabold text-slate-950">Novo cenário</h2>
               <p className="mt-1 text-sm text-slate-600">
-                Informe os dados iniciais. O cenario sera criado zerado para edicao.
+                Informe os dados iniciais. O cenário será criado zerado para edição.
               </p>
             </div>
 
             <form onSubmit={handleCriar} className="space-y-5 p-6">
               <div>
                 <label className="mb-2 block text-sm font-semibold text-slate-700">
-                  Nome do cenario
+                  Nome do cenário
                 </label>
                 <input
                   type="text"
@@ -252,7 +252,7 @@ export default function CenariosLista() {
 
               <div>
                 <label className="mb-2 block text-sm font-semibold text-slate-700">
-                  Descricao
+                  Descrição
                 </label>
                 <textarea
                   value={descricaoNova}

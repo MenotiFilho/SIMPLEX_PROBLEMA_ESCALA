@@ -148,7 +148,7 @@ export default function CenarioDetalhe() {
   if (carregando) {
     return (
       <div className="flex h-full items-center justify-center rounded-lg border border-slate-200 bg-white p-8 text-center text-sm font-semibold text-slate-500 shadow-sm">
-        Carregando cenario...
+        Carregando cenário...
       </div>
     );
   }
@@ -156,9 +156,9 @@ export default function CenarioDetalhe() {
   if (naoEncontrado) {
     return (
       <div className="flex h-full flex-col items-center justify-center rounded-lg border border-slate-200 bg-white p-10 text-center shadow-sm">
-        <h1 className="text-2xl font-extrabold text-slate-950">Cenario nao encontrado</h1>
+        <h1 className="text-2xl font-extrabold text-slate-950">Cenário não encontrado</h1>
         <p className="mt-2 text-sm text-slate-600">
-          O cenario solicitado nao existe ou foi removido.
+          O cenário solicitado não existe ou foi removido.
         </p>
         <button
           type="button"
@@ -178,16 +178,16 @@ export default function CenarioDetalhe() {
     ? 'Atualizando...'
     : mudouEstrutura
       ? 'Resolver novamente'
-      : 'Resolver cenario';
+      : 'Resolver cenário';
   const avisoSolucao = mudouEstrutura
     ? {
         tipo: 'alterado',
-        mensagem: 'O cenario mudou. Resolva novamente para atualizar a solucao.',
+        mensagem: 'O cenário mudou. Resolva novamente para atualizar a solução.',
       }
     : !resultado
       ? {
           tipo: 'sem-solucao',
-          mensagem: 'Este cenario ainda nao possui solucao salva.',
+          mensagem: 'Este cenário ainda nao possui solução salva.',
         }
       : null;
 
@@ -204,7 +204,7 @@ export default function CenarioDetalhe() {
                 onChange={(event) => atualizarCampoCenario('nome', event.target.value)}
                 onBlur={salvarMetadadosAoSair}
                 className="w-full rounded-md border border-transparent bg-slate-50 px-3 py-2 text-xl font-extrabold tracking-tight text-slate-950 outline-none transition focus:border-blue-300 focus:bg-white focus:ring-2 focus:ring-blue-100"
-                placeholder="Nome do cenario"
+                placeholder="Nome do cenário"
                 required
               />
             
@@ -215,7 +215,7 @@ export default function CenarioDetalhe() {
                 onChange={(event) => atualizarCampoCenario('descricao', event.target.value)}
                 onBlur={salvarMetadadosAoSair}
                 className="w-full rounded-md border border-transparent bg-slate-50 px-3 py-2 text-sm font-medium text-slate-700 outline-none transition focus:border-blue-300 focus:bg-white focus:ring-2 focus:ring-blue-100"
-                placeholder="Descricao do cenario"
+                placeholder="Descrição do cenário"
               />
             
           </div>
@@ -264,9 +264,9 @@ export default function CenarioDetalhe() {
               )}
               <div className="mt-4 flex min-h-56 items-center justify-center rounded-lg border border-dashed border-slate-300 p-8 text-center">
                 <div>
-                  <h2 className="text-lg font-extrabold text-slate-900">Sem solucao exibida</h2>
+                  <h2 className="text-lg font-extrabold text-slate-900">Sem solução exibida</h2>
                   <p className="mt-2 max-w-sm text-sm text-slate-600">
-                    Ajuste regra e periodos e use o botao Resolver cenario no header.
+                    Ajuste regra e períodos e use o botão Resolver cenário.
                   </p>
                 </div>
               </div>

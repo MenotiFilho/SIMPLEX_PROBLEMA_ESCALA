@@ -71,7 +71,7 @@ export default function ResultadoOtimizacao({ resultado, aviso }) {
                 <table className="w-full text-left text-sm">
                   <thead className="bg-slate-50 text-slate-700">
                     <tr>
-                      <th className="px-3 py-2 font-semibold">Periodos em que trabalha</th>
+                      <th className="px-3 py-2 font-semibold">Períodos em que trabalha</th>
                       <th className="px-3 py-2 text-right font-semibold">Alocados</th>
                     </tr>
                   </thead>
@@ -93,13 +93,13 @@ export default function ResultadoOtimizacao({ resultado, aviso }) {
           {resultado.cobertura?.length > 0 && (
             <div>
               <h3 className="mb-2 text-sm font-extrabold uppercase tracking-wide text-slate-700">
-                Cobertura por periodo
+                Cobertura por período
               </h3>
               <div className="overflow-hidden rounded-lg border border-slate-200">
                 <table className="w-full text-left text-sm">
                   <thead className="bg-slate-50 text-slate-700">
                     <tr>
-                      <th className="px-3 py-2 font-semibold">Periodo</th>
+                      <th className="px-3 py-2 font-semibold">Período</th>
                       <th className="px-3 py-2 text-center font-semibold">Min.</th>
                       <th className="px-3 py-2 text-center font-semibold">Atend.</th>
                       <th className="px-3 py-2 text-right font-semibold">Sobra</th>
