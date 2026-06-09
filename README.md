@@ -52,6 +52,32 @@ Para parar e apagar o volume com os dados:
 docker compose down -v
 ```
 
+## Deploy completo com backend e frontend
+
+O `docker-compose.yml` da raiz agora sobe os tres servicos:
+
+- `postgres`
+- `backend`
+- `frontend`
+
+Suba tudo com:
+
+```bash
+docker compose up -d --build
+```
+
+Arquitetura do deploy:
+
+- O `frontend` roda em Nginx na porta `80`
+- O Nginx encaminha `/api/*` para o `backend` interno
+- O `backend` fala com o `postgres` pelo nome do servico `postgres`
+- O Cloudflare Tunnel deve apontar para o `frontend`, nao para o backend
+
+Observacao:
+
+- Em producao, o frontend usa caminho relativo `/api`, entao nao precisa de `VITE_API_BASE_URL`
+- Em desenvolvimento, o Vite local já faz proxy de `/api` para `http://localhost:8080`
+
 ## Rodar o backend
 
 Com o PostgreSQL ativo, entre na pasta do backend:
