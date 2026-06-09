@@ -4,8 +4,8 @@ import CenariosLista from './paginas/CenariosLista';
 
 function App() {
   return (
-    <div className="min-h-screen bg-slate-100 px-4 py-8 font-sans text-slate-800">
-      <main className="mx-auto max-w-6xl">
+    <div className="h-screen overflow-hidden bg-slate-100 p-4 font-sans text-slate-800">
+      <main className="mx-auto flex h-full max-w-7xl flex-col overflow-hidden">
         <Routes>
           <Route path="/" element={<Navigate to="/cenarios" replace />} />
           <Route path="/cenarios" element={<CenariosLista />} />

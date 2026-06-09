@@ -115,32 +115,34 @@ export default function CenariosLista() {
   };
 
   return (
-    <div className="space-y-6">
-      <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <h1 className="text-3xl font-extrabold tracking-tight text-slate-950">
-            Cenarios de escala
-          </h1>
-          <p className="mt-1 text-sm text-slate-600">
-            Gerencie os cenarios salvos e resolva escalas persistidas no banco.
-          </p>
+    <div className="flex h-full min-h-0 flex-col gap-4">
+      <header className="shrink-0 rounded-lg border border-slate-200 bg-white px-5 py-4 shadow-sm">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <h1 className="text-3xl font-extrabold tracking-tight text-slate-950">
+              Cenarios de escala
+            </h1>
+            <p className="mt-1 text-sm text-slate-600">
+              Gerencie os cenarios salvos e resolva escalas persistidas no banco.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={abrirModalCriacao}
+            className="inline-flex items-center justify-center rounded-md bg-blue-600 px-5 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-blue-700"
+          >
+            Novo cenario
+          </button>
         </div>
-        <button
-          type="button"
-          onClick={abrirModalCriacao}
-          className="inline-flex items-center justify-center rounded-md bg-blue-600 px-5 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-blue-700"
-        >
-          Novo cenario
-        </button>
       </header>
 
       {erro && (
-        <div className="rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">
+        <div className="shrink-0 rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">
           {erro}
         </div>
       )}
 
-      <section className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
+      <section className="min-h-0 flex-1 overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
         {carregando ? (
           <div className="p-8 text-center text-sm font-semibold text-slate-500">
             Carregando cenarios...
@@ -160,9 +162,9 @@ export default function CenariosLista() {
             </button>
           </div>
         ) : (
-          <div className="overflow-x-auto">
+          <div className="h-full overflow-auto">
             <table className="w-full min-w-[820px] text-left text-sm">
-              <thead className="border-b border-slate-200 bg-slate-50 text-slate-700">
+              <thead className="sticky top-0 z-10 border-b border-slate-200 bg-slate-50 text-slate-700">
                 <tr>
                   <th className="px-5 py-4 font-bold">Nome</th>
                   <th className="px-5 py-4 font-bold">Descricao</th>
