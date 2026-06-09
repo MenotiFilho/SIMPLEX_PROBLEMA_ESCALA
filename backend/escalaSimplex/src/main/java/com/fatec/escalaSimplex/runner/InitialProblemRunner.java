@@ -74,8 +74,7 @@ public class InitialProblemRunner implements CommandLineRunner {
     private void imprimirResultadoContinuo(ResultadoOtimizacao resultado) {
         System.out.println("\nStatus: " + resultado.status());
 
-        System.out.printf("Z contínuo: %.2f%n", resultado.zContinuo());
-        System.out.println("Z aproximado: " + resultado.zAproximado());
+        System.out.println("Z inteiro: " + resultado.zInteiro());
 
         System.out.println("\nQuantidade por padrão:");
         resultado.padroes().forEach(padrao ->
@@ -108,7 +107,7 @@ public class InitialProblemRunner implements CommandLineRunner {
     private void imprimirResultadoInteiro(ResultadoOtimizacao resultado) {
         System.out.println("\nStatus: " + resultado.status());
 
-        System.out.printf("Z inteiro: %.0f%n", resultado.zContinuo());
+        System.out.println("Z inteiro: " + resultado.zInteiro());
 
         System.out.println("\nQuantidade por padrão:");
         resultado.padroes().forEach(padrao ->

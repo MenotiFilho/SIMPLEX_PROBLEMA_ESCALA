@@ -98,6 +98,6 @@ public class GeradorPadroesService {
             }
         }
 
-        return "Trabalha " + String.join(", ", nomesTrabalho);
+        return String.join(", ", nomesTrabalho);
     }
 }

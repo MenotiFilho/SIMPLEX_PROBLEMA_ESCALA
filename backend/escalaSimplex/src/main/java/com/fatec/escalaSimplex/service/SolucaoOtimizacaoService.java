@@ -25,7 +25,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SolucaoOtimizacaoService {
 
-    private static final String SOLVER_SIMPLEX = "GLOP";
+    private static final String SOLVER_MIP = "MIP/SCIP";
 
     private final CenarioRepository cenarioRepository;
     private final CenarioMapper cenarioMapper;
@@ -68,9 +68,8 @@ public class SolucaoOtimizacaoService {
     private SolucaoOtimizacaoEntity toEntity(ResultadoOtimizacao resultado) {
         SolucaoOtimizacaoEntity entity = new SolucaoOtimizacaoEntity();
         entity.setStatus(resultado.status());
-        entity.setZContinuo(resultado.zContinuo());
-        entity.setZAproximado(resultado.zAproximado());
-        entity.setSolver(SOLVER_SIMPLEX);
+        entity.setZInteiro(resultado.zInteiro());
+        entity.setSolver(SOLVER_MIP);
         entity.setResolvidoEm(Instant.now());
         entity.setPadroesJson(writeJson(resultado.padroes()));
         entity.setCoberturaJson(writeJson(resultado.cobertura()));
@@ -93,8 +92,7 @@ public class SolucaoOtimizacaoService {
 
         return new ResultadoOtimizacao(
                 entity.getStatus(),
-                entity.getZContinuo(),
-                entity.getZAproximado(),
+                entity.getZInteiro(),
                 padroes,
                 cobertura,
                 entity.getModeloMatematico()

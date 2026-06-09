@@ -4,8 +4,7 @@ import java.util.List;
 
 public record ResultadoOtimizacao(
         String status,
-        double zContinuo,
-        int zAproximado,
+        int zInteiro,
         List<ResultadoPadrao> padroes,
         List<CoberturaPeriodo> cobertura,
         String modeloMatematico

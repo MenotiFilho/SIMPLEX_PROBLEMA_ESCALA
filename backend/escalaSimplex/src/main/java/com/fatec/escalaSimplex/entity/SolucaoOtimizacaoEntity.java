@@ -30,10 +30,7 @@ public class SolucaoOtimizacaoEntity {
     private String status;
 
     @Column(nullable = false)
-    private double zContinuo;
-
-    @Column(nullable = false)
-    private int zAproximado;
+    private int zInteiro;
 
     @Column(nullable = false)
     private String solver;

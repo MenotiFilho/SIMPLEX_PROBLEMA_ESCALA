@@ -16,7 +16,7 @@ function formatarStatus(status) {
   return status || 'Solução não encontrada';
 }
 
-export default function ResultadoOtimizacao({ resultado }) {
+export default function ResultadoOtimizacao({ resultado, aviso }) {
   if (!resultado) {
     return null;
   }
@@ -27,6 +27,18 @@ export default function ResultadoOtimizacao({ resultado }) {
   return (
     <section className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
       <div className="space-y-4 p-4">
+        {aviso && (
+          <div
+            className={`rounded-lg border px-4 py-3 ${
+              aviso.tipo === 'alterado'
+                ? 'border-amber-200 bg-amber-50 text-amber-900'
+                : 'border-blue-200 bg-blue-50 text-blue-900'
+            }`}
+          >
+            <p className="text-sm font-semibold">{aviso.mensagem}</p>
+          </div>
+        )}
+
         <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
           <div className="rounded-lg border border-slate-200 bg-slate-50 px-4 py-3">
             <p className="text-xs font-bold uppercase tracking-wide text-slate-500">Status</p>
@@ -42,7 +54,7 @@ export default function ResultadoOtimizacao({ resultado }) {
             <p className="text-xs font-bold uppercase tracking-wide text-blue-600">
               Total de funcionarios
             </p>
-            <p className="mt-1 text-3xl font-black text-blue-950">{resultado.zAproximado}</p>
+            <p className="mt-1 text-3xl font-black text-blue-950">{resultado.zInteiro}</p>
           </div>
         </div>
 
@@ -65,7 +77,7 @@ export default function ResultadoOtimizacao({ resultado }) {
                       <tr key={`${padrao.nome}-${index}`} className="hover:bg-slate-50">
                         <td className="px-3 py-2 font-medium text-slate-900">{padrao.nome}</td>
                         <td className="px-3 py-2 text-right font-bold text-blue-700">
-                          {padrao.quantidadeAproximada}
+                          {padrao.quantidadeInteira ?? padrao.quantidadeAproximada}
                         </td>
                       </tr>
                     ))}
@@ -98,10 +110,10 @@ export default function ResultadoOtimizacao({ resultado }) {
                           {periodo.demandaMinima}
                         </td>
                         <td className="px-3 py-2 text-center font-bold text-green-700">
-                          {periodo.atendidosAproximado}
+                          {periodo.atendidosInteiro ?? periodo.atendidosAproximado}
                         </td>
                         <td className="px-3 py-2 text-right font-medium text-orange-600">
-                          +{periodo.sobraAproximada}
+                          +{periodo.sobraInteira ?? periodo.sobraAproximada}
                         </td>
                       </tr>
                     ))}

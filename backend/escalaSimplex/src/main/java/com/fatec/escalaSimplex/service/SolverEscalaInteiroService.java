@@ -65,7 +65,6 @@ public class SolverEscalaInteiroService {
                 && status != MPSolver.ResultStatus.FEASIBLE) {
             return new ResultadoOtimizacao(
                     status.name(),
-                    0.0,
                     0,
                     List.of(),
                     List.of(),
@@ -92,7 +91,6 @@ public class SolverEscalaInteiroService {
 
         return new ResultadoOtimizacao(
                 status.name(),
-                zInteiro,
                 zInteiro,
                 resultadoPadroes,
                 cobertura,

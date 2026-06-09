@@ -64,7 +64,6 @@ public class SolverEscalaService {
         if (status != MPSolver.ResultStatus.OPTIMAL) {
             return new ResultadoOtimizacao(
                     status.name(),
-                    0.0,
                     0,
                     List.of(),
                     List.of(),
@@ -85,14 +84,13 @@ public class SolverEscalaService {
                 padroes
         );
 
-        int zAproximado = resultadoPadroes.stream()
+        int zInteiro = resultadoPadroes.stream()
                 .mapToInt(ResultadoPadrao::quantidadeAproximada)
                 .sum();
 
         return new ResultadoOtimizacao(
                 status.name(),
-                limparErroNumerico(solver.objective().value()),
-                zAproximado,
+                zInteiro,
                 resultadoPadroes,
                 cobertura,
                 modeloMatematico

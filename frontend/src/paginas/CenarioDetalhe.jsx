@@ -174,16 +174,30 @@ export default function CenarioDetalhe() {
   const mudouEstrutura =
     cenarioOriginal && chaveEstrutural(cenario) !== chaveEstrutural(cenarioOriginal);
   const deveMostrarAcaoDeResolucao = mudouEstrutura || !resultado;
+  const textoBotaoResolver = resolvendo || salvando
+    ? 'Atualizando...'
+    : mudouEstrutura
+      ? 'Resolver novamente'
+      : 'Resolver cenario';
+  const avisoSolucao = mudouEstrutura
+    ? {
+        tipo: 'alterado',
+        mensagem: 'O cenario mudou. Resolva novamente para atualizar a solucao.',
+      }
+    : !resultado
+      ? {
+          tipo: 'sem-solucao',
+          mensagem: 'Este cenario ainda nao possui solucao salva.',
+        }
+      : null;
 
   return (
     <div className="flex h-full min-h-0 flex-col gap-4">
-      <header className="shrink-0 rounded-lg border border-slate-200 bg-white px-5 py-4 shadow-sm">
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-          <div className="grid min-w-0 flex-1 grid-cols-1 gap-3 md:grid-cols-[minmax(220px,0.75fr)_minmax(260px,1.25fr)]">
-            <div>
-              <label className="mb-1 block text-xs font-bold uppercase tracking-wide text-slate-500">
-                Nome do cenario
-              </label>
+      <header className="shrink-0 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+        
+        <div className="flex gap-2 p-4">
+          <div className="flex flex-col">
+
               <input
                 type="text"
                 value={cenario.nome}
@@ -193,11 +207,8 @@ export default function CenarioDetalhe() {
                 placeholder="Nome do cenario"
                 required
               />
-            </div>
-            <div>
-              <label className="mb-1 block text-xs font-bold uppercase tracking-wide text-slate-500">
-                Descricao
-              </label>
+            
+            
               <input
                 type="text"
                 value={cenario.descricao}
@@ -206,14 +217,24 @@ export default function CenarioDetalhe() {
                 className="w-full rounded-md border border-transparent bg-slate-50 px-3 py-2 text-sm font-medium text-slate-700 outline-none transition focus:border-blue-300 focus:bg-white focus:ring-2 focus:ring-blue-100"
                 placeholder="Descricao do cenario"
               />
-            </div>
+            
           </div>
-          <Link
-            to="/cenarios"
-            className="inline-flex items-center justify-center rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-bold text-slate-700 transition hover:bg-slate-100"
-          >
-            Voltar para lista
-          </Link>
+          <div className="ml-auto flex items-end gap-2 flex-col">
+            <Link
+              to="/cenarios"
+              className="inline-flex h-10 items-center justify-center rounded-md border border-slate-300 bg-white px-4 text-sm font-bold text-slate-700 transition hover:bg-slate-100"
+            >
+              Voltar
+            </Link>
+            <button
+              type="button"
+              onClick={handleResolver}
+              disabled={!deveMostrarAcaoDeResolucao || resolvendo || salvando}
+              className="inline-flex h-10 items-center justify-center rounded-md bg-green-600 px-5 text-sm font-bold text-white shadow-sm transition hover:bg-green-700 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:text-slate-500"
+            >
+              {textoBotaoResolver}
+            </button>
+          </div>
         </div>
       </header>
 
@@ -232,49 +253,24 @@ export default function CenarioDetalhe() {
         </div>
 
         <div className="min-h-0 overflow-y-auto">
-          {deveMostrarAcaoDeResolucao && (
-            <div
-              className={`mb-4 rounded-lg border p-4 ${
-                mudouEstrutura ? 'border-amber-200 bg-amber-50' : 'border-blue-200 bg-blue-50'
-              }`}
-            >
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                <p
-                  className={`text-sm font-semibold ${
-                    mudouEstrutura ? 'text-amber-900' : 'text-blue-900'
-                  }`}
-                >
-                  {mudouEstrutura
-                    ? 'O cenario mudou. Resolva novamente para atualizar a solucao.'
-                    : 'Este cenario ainda nao possui solucao salva.'}
-                </p>
-                <button
-                  type="button"
-                  onClick={handleResolver}
-                  disabled={resolvendo || salvando}
-                  className="rounded-md bg-green-600 px-4 py-2 text-sm font-bold text-white shadow-sm transition hover:bg-green-700 disabled:cursor-not-allowed disabled:bg-green-300"
-                >
-                  {resolvendo || salvando
-                    ? 'Atualizando...'
-                    : mudouEstrutura
-                      ? 'Resolver novamente'
-                      : 'Resolver cenario'}
-                </button>
-              </div>
-            </div>
-          )}
-
           {resultado ? (
-            <ResultadoOtimizacao resultado={resultado} />
+            <ResultadoOtimizacao resultado={resultado} aviso={avisoSolucao} />
           ) : (
-            <div className="flex h-full min-h-64 items-center justify-center rounded-lg border border-dashed border-slate-300 bg-white p-8 text-center">
-              <div>
-                <h2 className="text-lg font-extrabold text-slate-900">Sem solucao exibida</h2>
-                <p className="mt-2 max-w-sm text-sm text-slate-600">
-                  Ajuste regra e periodos para habilitar a resolucao do cenario.
-                </p>
+            <section className="overflow-hidden rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+              {avisoSolucao && (
+                <div className="rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-blue-900">
+                  <p className="text-sm font-semibold">{avisoSolucao.mensagem}</p>
+                </div>
+              )}
+              <div className="mt-4 flex min-h-56 items-center justify-center rounded-lg border border-dashed border-slate-300 p-8 text-center">
+                <div>
+                  <h2 className="text-lg font-extrabold text-slate-900">Sem solucao exibida</h2>
+                  <p className="mt-2 max-w-sm text-sm text-slate-600">
+                    Ajuste regra e periodos e use o botao Resolver cenario no header.
+                  </p>
+                </div>
               </div>
-            </div>
+            </section>
           )}
         </div>
       </div>
