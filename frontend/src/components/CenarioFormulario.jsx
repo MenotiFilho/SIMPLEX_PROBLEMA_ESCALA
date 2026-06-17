@@ -19,13 +19,13 @@ export default function CenarioFormulario({
     semanal: {
       label: 'Semanal 5x2',
       periodos: [
+        { nome: 'Domingo', demandaMinima: 0, ativo: true },
         { nome: 'Segunda', demandaMinima: 0, ativo: true },
         { nome: 'Terca', demandaMinima: 0, ativo: true },
         { nome: 'Quarta', demandaMinima: 0, ativo: true },
         { nome: 'Quinta', demandaMinima: 0, ativo: true },
         { nome: 'Sexta', demandaMinima: 0, ativo: true },
         { nome: 'Sabado', demandaMinima: 0, ativo: true },
-        { nome: 'Domingo', demandaMinima: 0, ativo: true },
       ],
       regraTrabalhoFolga: {
         periodosTrabalhados: 5,

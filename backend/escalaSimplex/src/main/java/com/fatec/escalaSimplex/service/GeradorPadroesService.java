@@ -104,13 +104,35 @@ public class GeradorPadroesService {
             List<Integer> trabalhaPorPeriodo
     ) {
         List<String> nomesTrabalho = new ArrayList<>();
+        int primeiroIndiceTrabalho = encontrarInicioDoBlocoDeTrabalho(trabalhaPorPeriodo);
 
-        for (int i = 0; i < periodos.size(); i++) {
-            if (trabalhaPorPeriodo.get(i) == 1) {
-                nomesTrabalho.add(periodos.get(i).nome());
+        if (primeiroIndiceTrabalho < 0) {
+            return "";
+        }
+
+        for (int deslocamento = 0; deslocamento < periodos.size(); deslocamento++) {
+            int indicePeriodo = (primeiroIndiceTrabalho + deslocamento) % periodos.size();
+
+            if (trabalhaPorPeriodo.get(indicePeriodo) == 1) {
+                nomesTrabalho.add(periodos.get(indicePeriodo).nome());
             }
         }
 
         return String.join(", ", nomesTrabalho);
+    }
+
+    private int encontrarInicioDoBlocoDeTrabalho(List<Integer> trabalhaPorPeriodo) {
+        for (int i = 0; i < trabalhaPorPeriodo.size(); i++) {
+            if (trabalhaPorPeriodo.get(i) != 1) {
+                continue;
+            }
+
+            int indiceAnterior = Math.floorMod(i - 1, trabalhaPorPeriodo.size());
+            if (trabalhaPorPeriodo.get(indiceAnterior) == 0) {
+                return i;
+            }
+        }
+
+        return -1;
     }
 }

@@ -47,13 +47,13 @@ public class InitialProblemRunner implements CommandLineRunner {
                 "Problema LCL original",
                 "Cenário base com 7 períodos, 5 trabalhados e 2 de folga.",
                 List.of(
-                        new PeriodoEscala(1L, "Segunda", 1, 18, true),
-                        new PeriodoEscala(2L, "Terça", 2, 12, true),
-                        new PeriodoEscala(3L, "Quarta", 3, 15, true),
-                        new PeriodoEscala(4L, "Quinta", 4, 19, true),
-                        new PeriodoEscala(5L, "Sexta", 5, 14, true),
-                        new PeriodoEscala(6L, "Sábado", 6, 16, true),
-                        new PeriodoEscala(7L, "Domingo", 7, 11, true)
+                        new PeriodoEscala(1L, "Domingo", 1, 11, true),
+                        new PeriodoEscala(2L, "Segunda", 2, 18, true),
+                        new PeriodoEscala(3L, "Terça", 3, 12, true),
+                        new PeriodoEscala(4L, "Quarta", 4, 15, true),
+                        new PeriodoEscala(5L, "Quinta", 5, 19, true),
+                        new PeriodoEscala(6L, "Sexta", 6, 14, true),
+                        new PeriodoEscala(7L, "Sábado", 7, 16, true)
                 ),
                 new RegraTrabalhoFolga(5, 2, true)
         );
@@ -138,17 +138,17 @@ public class InitialProblemRunner implements CommandLineRunner {
                 "Escala 12x36 - exemplo",
                 "Cenário com períodos de 12 horas em escala 12x36.",
                 List.of(
-                        new PeriodoEscala(1L, "Segunda 07h-19h", 1, 4, true),
-                        new PeriodoEscala(2L, "Segunda 19h-07h", 2, 2, true),
+                        new PeriodoEscala(1L, "Domingo 07h-19h", 1, 2, true),
+                        new PeriodoEscala(2L, "Domingo 19h-07h", 2, 2, true),
 
-                        new PeriodoEscala(3L, "Terça 07h-19h", 3, 5, true),
-                        new PeriodoEscala(4L, "Terça 19h-07h", 4, 2, true),
+                        new PeriodoEscala(3L, "Segunda 07h-19h", 3, 4, true),
+                        new PeriodoEscala(4L, "Segunda 19h-07h", 4, 2, true),
 
-                        new PeriodoEscala(5L, "Quarta 07h-19h", 5, 4, true),
-                        new PeriodoEscala(6L, "Quarta 19h-07h", 6, 3, true),
+                        new PeriodoEscala(5L, "Terça 07h-19h", 5, 5, true),
+                        new PeriodoEscala(6L, "Terça 19h-07h", 6, 2, true),
 
-                        new PeriodoEscala(7L, "Quinta 07h-19h", 7, 5, true),
-                        new PeriodoEscala(8L, "Quinta 19h-07h", 8, 2, true)
+                        new PeriodoEscala(7L, "Quarta 07h-19h", 7, 4, true),
+                        new PeriodoEscala(8L, "Quarta 19h-07h", 8, 3, true)
                 ),
                 new RegraTrabalhoFolga(1, 3, true)
         );

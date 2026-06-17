@@ -42,13 +42,13 @@ public class CenariosSeedRunner implements ApplicationRunner {
                 "Caso teste - Base 5x2",
                 "Cenário base da documentação: 7 períodos, 5 trabalhados e 2 de folga.",
                 List.of(
-                        periodo("Segunda", 1, 18),
-                        periodo("Terça", 2, 12),
-                        periodo("Quarta", 3, 15),
-                        periodo("Quinta", 4, 19),
-                        periodo("Sexta", 5, 14),
-                        periodo("Sábado", 6, 16),
-                        periodo("Domingo", 7, 11)
+                        periodo("Domingo", 1, 11),
+                        periodo("Segunda", 2, 18),
+                        periodo("Terça", 3, 12),
+                        periodo("Quarta", 4, 15),
+                        periodo("Quinta", 5, 19),
+                        periodo("Sexta", 6, 14),
+                        periodo("Sábado", 7, 16)
                 ),
                 new RegraTrabalhoFolgaRequest(5, 2, true)
         );
@@ -59,14 +59,14 @@ public class CenariosSeedRunner implements ApplicationRunner {
                 "Caso teste - Escala 12x36",
                 "Cenário com turnos de 12 horas em ciclo 12x36.",
                 List.of(
-                        periodo("Segunda 07h-19h", 1, 4),
-                        periodo("Segunda 19h-07h", 2, 2),
-                        periodo("Terça 07h-19h", 3, 5),
-                        periodo("Terça 19h-07h", 4, 2),
-                        periodo("Quarta 07h-19h", 5, 4),
-                        periodo("Quarta 19h-07h", 6, 3),
-                        periodo("Quinta 07h-19h", 7, 5),
-                        periodo("Quinta 19h-07h", 8, 2)
+                        periodo("Domingo 07h-19h", 1, 2),
+                        periodo("Domingo 19h-07h", 2, 2),
+                        periodo("Segunda 07h-19h", 3, 4),
+                        periodo("Segunda 19h-07h", 4, 2),
+                        periodo("Terça 07h-19h", 5, 5),
+                        periodo("Terça 19h-07h", 6, 2),
+                        periodo("Quarta 07h-19h", 7, 4),
+                        periodo("Quarta 19h-07h", 8, 3)
                 ),
                 new RegraTrabalhoFolgaRequest(1, 3, true)
         );
@@ -77,13 +77,13 @@ public class CenariosSeedRunner implements ApplicationRunner {
                 "Caso teste - Operação 6x1",
                 "Cenário semanal para operação com seis períodos trabalhados e um de folga.",
                 List.of(
-                        periodo("Segunda", 1, 10),
-                        periodo("Terça", 2, 10),
-                        periodo("Quarta", 3, 12),
-                        periodo("Quinta", 4, 12),
-                        periodo("Sexta", 5, 14),
-                        periodo("Sábado", 6, 16),
-                        periodo("Domingo", 7, 8)
+                        periodo("Domingo", 1, 8),
+                        periodo("Segunda", 2, 10),
+                        periodo("Terça", 3, 10),
+                        periodo("Quarta", 4, 12),
+                        periodo("Quinta", 5, 12),
+                        periodo("Sexta", 6, 14),
+                        periodo("Sábado", 7, 16)
                 ),
                 new RegraTrabalhoFolgaRequest(6, 1, true)
         );
