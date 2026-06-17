@@ -138,16 +138,15 @@ export default function ResultadoOtimizacao({ resultado, aviso }) {
           {resultado.cobertura?.length > 0 && (
             <div>
               <h3 className="mb-2 text-sm font-extrabold uppercase tracking-wide text-slate-700">
-                Cobertura por turno
+                Cobertura
               </h3>
               <div className="overflow-hidden rounded-lg border border-slate-200">
                 <table className="w-full text-left text-sm">
                   <thead className="bg-slate-50 text-slate-700">
                     <tr>
                       <th className="px-3 py-2 font-semibold">Turno</th>
-                      <th className="px-3 py-2 text-center font-semibold">Min.</th>
-                      <th className="px-3 py-2 text-center font-semibold">Atend.</th>
-                      <th className="px-3 py-2 text-right font-semibold">Sobra</th>
+                      <th className="px-3 py-2 text-center font-semibold">Mínimo</th>
+                      <th className="px-3 py-2 text-center font-semibold">Utilizado</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
@@ -160,12 +159,6 @@ export default function ResultadoOtimizacao({ resultado, aviso }) {
                         <td className="px-3 py-2 text-center font-bold text-green-700">
                           {formatarNumero(
                             periodo.atendidosContinuo ?? periodo.atendidosAproximado,
-                            true,
-                          )}
-                        </td>
-                        <td className="px-3 py-2 text-right font-medium text-orange-600">
-                          +{formatarNumero(
-                            periodo.sobraContinua ?? periodo.sobraAproximada,
                             true,
                           )}
                         </td>

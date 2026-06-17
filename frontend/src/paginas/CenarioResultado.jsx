@@ -110,12 +110,7 @@ export default function CenarioResultado() {
             >
               Voltar ao cenário
             </Link>
-            <Link
-              to={`/cenarios/${id}`}
-              className="inline-flex h-10 items-center justify-center rounded-md bg-green-600 px-4 text-sm font-bold text-white shadow-sm transition hover:bg-green-700"
-            >
-              Editar e resolver
-            </Link>
+           
           </div>
         </div>
       </header>
