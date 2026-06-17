@@ -60,7 +60,7 @@ export default function ResultadoOtimizacao({ resultado, aviso }) {
   }
 
   const statusExibicao = formatarStatus(resultado.status);
-  const solucaoEncontrada = statusExibicao === 'Ótimo';
+  const solucaoEncontrada = statusExibicao === 'Ótima';
   const padroesComAlocados = (resultado.padroes ?? [])/*.filter(
     (padrao) => (valorAlocado(padrao) ?? 0) > 0,
   )*/;
@@ -87,7 +87,7 @@ export default function ResultadoOtimizacao({ resultado, aviso }) {
 
         <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
           <div className="rounded-lg border border-slate-200 bg-slate-50 px-4 py-3">
-            <p className="text-xs font-bold uppercase tracking-wide text-slate-500">Status</p>
+            <p className="text-xs font-bold uppercase tracking-wide text-slate-500">Solução</p>
             <p
               className={`mt-1 text-xl font-black ${
                 solucaoEncontrada ? 'text-green-700' : 'text-amber-700'
@@ -98,7 +98,7 @@ export default function ResultadoOtimizacao({ resultado, aviso }) {
           </div>
           <div className="rounded-lg border border-blue-100 bg-blue-50 px-4 py-3">
             <p className="text-xs font-bold uppercase tracking-wide text-blue-600">
-              Z
+              Mínimo de funcionários necessários
             </p>
             <p className="mt-1 text-3xl font-black text-blue-950">
               {formatarNumero(valorObjetivo, true)}
