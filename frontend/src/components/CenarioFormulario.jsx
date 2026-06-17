@@ -163,6 +163,52 @@ export default function CenarioFormulario({
             </select>
           </div>
 
+                  <section>
+          <div className="grid grid-cols-1 gap-3 rounded-lg border border-blue-100 bg-blue-50/60 p-4 md:grid-cols-[1fr_1fr_auto] md:items-end">
+            <div>
+              <label className="mb-1 block text-xs font-bold uppercase tracking-wide text-blue-950">
+                Turnos trabalhados
+              </label>
+              <input
+                type="number"
+                min="1"
+                value={cenario.regraTrabalhoFolga.periodosTrabalhados}
+                onChange={(event) =>
+                  atualizarRegra('periodosTrabalhados', Number(event.target.value))
+                }
+                className="w-full rounded-md border border-blue-200 bg-white px-3 py-2 text-sm font-bold text-slate-800 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+              />
+            </div>
+            <div>
+              <label className="mb-1 block text-xs font-bold uppercase tracking-wide text-blue-950">
+                Turnos de folga
+              </label>
+              <input
+                type="number"
+                min="1"
+                value={cenario.regraTrabalhoFolga.periodosFolga}
+                onChange={(event) => atualizarRegra('periodosFolga', Number(event.target.value))}
+                className="w-full rounded-md border border-blue-200 bg-white px-3 py-2 text-sm font-bold text-slate-800 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+              />
+            </div>
+            <label className="flex h-10 items-center gap-3 rounded-md border border-blue-200 bg-white px-4 text-sm font-bold text-blue-950">
+              <input
+                type="checkbox"
+                checked={cenario.regraTrabalhoFolga.circular}
+                onChange={(event) => atualizarRegra('circular', event.target.checked)}
+                className="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+              />
+              Circular
+            </label>
+          </div>
+          {regraMaiorQuePeriodos && (
+            <p className="mt-2 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-sm font-semibold text-amber-800">
+              A soma de turnos trabalhados e folga ({totalRegra}) deve ser menor ou igual ao
+              total de turnos ({totalPeriodos}).
+            </p>
+          )}
+        </section>
+
           <div className="mb-3 flex justify-end">
             <button
               type="button"
@@ -227,52 +273,6 @@ export default function CenarioFormulario({
               </table>
             </div>
           </div>
-        </section>
-
-        <section>
-          <div className="grid grid-cols-1 gap-3 rounded-lg border border-blue-100 bg-blue-50/60 p-4 md:grid-cols-[1fr_1fr_auto] md:items-end">
-            <div>
-              <label className="mb-1 block text-xs font-bold uppercase tracking-wide text-blue-950">
-                Turnos trabalhados
-              </label>
-              <input
-                type="number"
-                min="1"
-                value={cenario.regraTrabalhoFolga.periodosTrabalhados}
-                onChange={(event) =>
-                  atualizarRegra('periodosTrabalhados', Number(event.target.value))
-                }
-                className="w-full rounded-md border border-blue-200 bg-white px-3 py-2 text-sm font-bold text-slate-800 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-              />
-            </div>
-            <div>
-              <label className="mb-1 block text-xs font-bold uppercase tracking-wide text-blue-950">
-                Turnos de folga
-              </label>
-              <input
-                type="number"
-                min="1"
-                value={cenario.regraTrabalhoFolga.periodosFolga}
-                onChange={(event) => atualizarRegra('periodosFolga', Number(event.target.value))}
-                className="w-full rounded-md border border-blue-200 bg-white px-3 py-2 text-sm font-bold text-slate-800 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-              />
-            </div>
-            <label className="flex h-10 items-center gap-3 rounded-md border border-blue-200 bg-white px-4 text-sm font-bold text-blue-950">
-              <input
-                type="checkbox"
-                checked={cenario.regraTrabalhoFolga.circular}
-                onChange={(event) => atualizarRegra('circular', event.target.checked)}
-                className="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
-              />
-              Circular
-            </label>
-          </div>
-          {regraMaiorQuePeriodos && (
-            <p className="mt-2 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-sm font-semibold text-amber-800">
-              A soma de turnos trabalhados e folga ({totalRegra}) deve ser menor ou igual ao
-              total de turnos ({totalPeriodos}).
-            </p>
-          )}
         </section>
 
         {children && (
