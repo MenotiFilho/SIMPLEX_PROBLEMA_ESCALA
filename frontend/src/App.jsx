@@ -14,7 +14,7 @@ function App() {
           <Route path="/cenarios/novo" element={<Navigate to="/cenarios" replace />} />
           <Route path="/cenarios/:id" element={<CenarioDetalhe />} />
           <Route path="/cenarios/:id/resultado" element={<CenarioResultado />} />
-          <Route path="*" element={<Navigate to="/cenarios" replace />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
     </div>
