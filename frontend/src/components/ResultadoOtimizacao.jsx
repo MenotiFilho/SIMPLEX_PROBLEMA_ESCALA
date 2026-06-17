@@ -2,7 +2,7 @@ function formatarStatus(status) {
   const statusNormalizado = String(status ?? '').toUpperCase();
 
   if (['OPTIMAL', 'OTIMO', 'ÓTIMO'].includes(statusNormalizado)) {
-    return 'Ótimo';
+    return 'Ótima';
   }
 
   if (
