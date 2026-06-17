@@ -16,6 +16,44 @@ function formatarStatus(status) {
   return status || 'Solução não encontrada';
 }
 
+function formatarNumero(valor, fixarDuasCasas = false) {
+  const numero = Number(valor ?? 0);
+
+  return new Intl.NumberFormat('pt-BR', {
+    minimumFractionDigits: fixarDuasCasas || !Number.isInteger(numero) ? 2 : 0,
+    maximumFractionDigits: 2,
+  }).format(numero);
+}
+
+function valorAlocado(padrao) {
+  return padrao.quantidadeContinua ?? padrao.quantidadeInteira ?? padrao.quantidadeAproximada;
+}
+
+function arredondarPreservandoTotal(valores, total, casasDecimais = 2) {
+  const fator = 10 ** casasDecimais;
+  const alvo = Math.round(Number(total ?? 0) * fator);
+  const base = valores.map((valor, index) => {
+    const escalado = Number(valor ?? 0) * fator;
+    const piso = Math.floor(escalado);
+
+    return {
+      index,
+      piso,
+      resto: escalado - piso,
+    };
+  });
+
+  let diferenca = alvo - base.reduce((soma, item) => soma + item.piso, 0);
+  const ordenados = [...base].sort((a, b) => b.resto - a.resto || a.index - b.index);
+
+  for (let i = 0; i < ordenados.length && diferenca > 0; i++) {
+    ordenados[i].piso += 1;
+    diferenca -= 1;
+  }
+
+  return base.map((item) => item.piso / fator);
+}
+
 export default function ResultadoOtimizacao({ resultado, aviso }) {
   if (!resultado) {
     return null;
@@ -24,8 +62,13 @@ export default function ResultadoOtimizacao({ resultado, aviso }) {
   const statusExibicao = formatarStatus(resultado.status);
   const solucaoEncontrada = statusExibicao === 'Ótimo';
   const padroesComAlocados = (resultado.padroes ?? [])/*.filter(
-    (padrao) => (padrao.quantidadeInteira ?? padrao.quantidadeAproximada ?? 0) > 0,
+    (padrao) => (valorAlocado(padrao) ?? 0) > 0,
   )*/;
+  const valorObjetivo = resultado.zContinuo ?? resultado.zInteiro;
+  const alocadosExibidos = arredondarPreservandoTotal(
+    padroesComAlocados.map(valorAlocado),
+    valorObjetivo,
+  );
 
   return (
     <section className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
@@ -55,9 +98,11 @@ export default function ResultadoOtimizacao({ resultado, aviso }) {
           </div>
           <div className="rounded-lg border border-blue-100 bg-blue-50 px-4 py-3">
             <p className="text-xs font-bold uppercase tracking-wide text-blue-600">
-              Total de funcionarios
+              Z
             </p>
-            <p className="mt-1 text-3xl font-black text-blue-950">{resultado.zInteiro}</p>
+            <p className="mt-1 text-3xl font-black text-blue-950">
+              {formatarNumero(valorObjetivo, true)}
+            </p>
           </div>
         </div>
 
@@ -80,7 +125,7 @@ export default function ResultadoOtimizacao({ resultado, aviso }) {
                       <tr key={`${padrao.nome}-${index}`} className="hover:bg-slate-50">
                         <td className="px-3 py-2 font-medium text-slate-900">{padrao.nome}</td>
                         <td className="px-3 py-2 text-right font-bold text-blue-700">
-                          {padrao.quantidadeInteira ?? padrao.quantidadeAproximada}
+                          {formatarNumero(alocadosExibidos[index], true)}
                         </td>
                       </tr>
                     ))}
@@ -113,10 +158,16 @@ export default function ResultadoOtimizacao({ resultado, aviso }) {
                           {periodo.demandaMinima}
                         </td>
                         <td className="px-3 py-2 text-center font-bold text-green-700">
-                          {periodo.atendidosInteiro ?? periodo.atendidosAproximado}
+                          {formatarNumero(
+                            periodo.atendidosContinuo ?? periodo.atendidosAproximado,
+                            true,
+                          )}
                         </td>
                         <td className="px-3 py-2 text-right font-medium text-orange-600">
-                          +{periodo.sobraInteira ?? periodo.sobraAproximada}
+                          +{formatarNumero(
+                            periodo.sobraContinua ?? periodo.sobraAproximada,
+                            true,
+                          )}
                         </td>
                       </tr>
                     ))}

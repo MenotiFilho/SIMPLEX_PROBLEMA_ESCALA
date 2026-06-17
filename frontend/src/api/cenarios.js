@@ -70,3 +70,7 @@ export function resolverCenario(id) {
 export function buscarSolucao(id) {
   return request(`/${id}/solution`);
 }
+
+export function buscarResultado(id) {
+  return request(`/${id}/resultado`);
+}

@@ -25,7 +25,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SolucaoOtimizacaoService {
 
-    private static final String SOLVER_MIP = "MIP/SCIP";
+    private static final String SOLVER_MIP_DISTRIBUIDO = "MIP/SCIP_GLOP_TIEBREAK";
 
     private final CenarioRepository cenarioRepository;
     private final CenarioMapper cenarioMapper;
@@ -36,8 +36,14 @@ public class SolucaoOtimizacaoService {
     public ResultadoOtimizacao resolverOuBuscarSalva(Long cenarioId) {
         CenarioEntity cenarioEntity = buscarCenario(cenarioId);
 
-        if (cenarioEntity.getSolucaoOtimizacao() != null) {
+        if (cenarioEntity.getSolucaoOtimizacao() != null
+                && SOLVER_MIP_DISTRIBUIDO.equals(cenarioEntity.getSolucaoOtimizacao().getSolver())) {
             return toDomain(cenarioEntity.getSolucaoOtimizacao());
+        }
+
+        if (cenarioEntity.getSolucaoOtimizacao() != null) {
+            cenarioEntity.setSolucaoOtimizacao(null);
+            cenarioRepository.saveAndFlush(cenarioEntity);
         }
 
         CenarioEscala cenario = cenarioMapper.toDomain(cenarioEntity);
@@ -53,7 +59,8 @@ public class SolucaoOtimizacaoService {
     public ResultadoOtimizacao buscarSalva(Long cenarioId) {
         CenarioEntity cenarioEntity = buscarCenario(cenarioId);
 
-        if (cenarioEntity.getSolucaoOtimizacao() == null) {
+        if (cenarioEntity.getSolucaoOtimizacao() == null
+                || !SOLVER_MIP_DISTRIBUIDO.equals(cenarioEntity.getSolucaoOtimizacao().getSolver())) {
             throw new EntityNotFoundException("Solução não encontrada para este cenário.");
         }
 
@@ -69,7 +76,7 @@ public class SolucaoOtimizacaoService {
         SolucaoOtimizacaoEntity entity = new SolucaoOtimizacaoEntity();
         entity.setStatus(resultado.status());
         entity.setZInteiro(resultado.zInteiro());
-        entity.setSolver(SOLVER_MIP);
+        entity.setSolver(SOLVER_MIP_DISTRIBUIDO);
         entity.setResolvidoEm(Instant.now());
         entity.setPadroesJson(writeJson(resultado.padroes()));
         entity.setCoberturaJson(writeJson(resultado.cobertura()));
@@ -90,8 +97,13 @@ public class SolucaoOtimizacaoService {
                 }
         );
 
+        double zContinuo = padroes.stream()
+                .mapToDouble(ResultadoPadrao::quantidadeContinua)
+                .sum();
+
         return new ResultadoOtimizacao(
                 entity.getStatus(),
+                zContinuo,
                 entity.getZInteiro(),
                 padroes,
                 cobertura,

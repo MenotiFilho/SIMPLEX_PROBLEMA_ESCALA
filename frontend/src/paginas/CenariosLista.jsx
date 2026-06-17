@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { criarCenario, excluirCenario, listarCenarios, resolverCenario } from '../api/cenarios';
+import { criarCenario, excluirCenario, listarCenarios } from '../api/cenarios';
 import { criarCenarioVazio } from '../utils/cenarioPayload';
 
 function descreverRegra(cenario) {
@@ -20,7 +20,6 @@ export default function CenariosLista() {
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState('');
   const [excluindoId, setExcluindoId] = useState(null);
-  const [resolvendoId, setResolvendoId] = useState(null);
   const [modalAberto, setModalAberto] = useState(false);
   const [nomeNovo, setNomeNovo] = useState('');
   const [descricaoNova, setDescricaoNova] = useState('');
@@ -186,7 +185,7 @@ export default function CenariosLista() {
                         >
                           Abrir
                         </Link>
-                        
+
                         <button
                           type="button"
                           onClick={() => handleExcluir(cenario)}

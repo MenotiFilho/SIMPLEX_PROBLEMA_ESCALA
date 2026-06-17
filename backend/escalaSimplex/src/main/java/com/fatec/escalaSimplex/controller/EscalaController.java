@@ -71,4 +71,9 @@ public class EscalaController {
     public ResultadoOtimizacao buscarSolucaoSalva(@PathVariable Long id) {
         return solucaoOtimizacaoService.buscarSalva(id);
     }
+
+    @GetMapping("/{id}/resultado")
+    public ResultadoOtimizacao buscarResultado(@PathVariable Long id) {
+        return solucaoOtimizacaoService.buscarSalva(id);
+    }
 }

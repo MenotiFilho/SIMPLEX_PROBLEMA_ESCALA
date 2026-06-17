@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import CenarioDetalhe from './paginas/CenarioDetalhe';
 import CenariosLista from './paginas/CenariosLista';
+import CenarioResultado from './paginas/CenarioResultado';
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
           <Route path="/cenarios" element={<CenariosLista />} />
           <Route path="/cenarios/novo" element={<Navigate to="/cenarios" replace />} />
           <Route path="/cenarios/:id" element={<CenarioDetalhe />} />
+          <Route path="/cenarios/:id/resultado" element={<CenarioResultado />} />
           <Route path="*" element={<Navigate to="/cenarios" replace />} />
         </Routes>
       </main>

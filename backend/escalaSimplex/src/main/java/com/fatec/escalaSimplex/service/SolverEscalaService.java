@@ -64,6 +64,7 @@ public class SolverEscalaService {
         if (status != MPSolver.ResultStatus.OPTIMAL) {
             return new ResultadoOtimizacao(
                     status.name(),
+                    0.0,
                     0,
                     List.of(),
                     List.of(),
@@ -71,12 +72,23 @@ public class SolverEscalaService {
             );
         }
 
-        List<ResultadoPadrao> resultadoPadroes = montarResultadoPadroes(padroes, variaveis);
+        MPVariable[] variaveisFinais = desempatarMaximizandoPrimeiroPeriodo(
+                periodosAtivosOrdenados,
+                padroes,
+                calcularZContinuo(variaveis),
+                infinito
+        );
+
+        if (variaveisFinais.length == 0) {
+            variaveisFinais = variaveis;
+        }
+
+        List<ResultadoPadrao> resultadoPadroes = montarResultadoPadroes(padroes, variaveisFinais);
 
         List<CoberturaPeriodo> cobertura = coberturaService.calcularContinua(
                 periodosAtivosOrdenados,
                 padroes,
-                variaveis
+                variaveisFinais
         );
 
         String modeloMatematico = modeloMatematicoService.gerarContinuo(
@@ -84,17 +96,86 @@ public class SolverEscalaService {
                 padroes
         );
 
+        double zContinuo = calcularZContinuo(variaveisFinais);
+
         int zInteiro = resultadoPadroes.stream()
                 .mapToInt(ResultadoPadrao::quantidadeAproximada)
                 .sum();
 
         return new ResultadoOtimizacao(
                 status.name(),
+                zContinuo,
                 zInteiro,
                 resultadoPadroes,
                 cobertura,
                 modeloMatematico
                  );
+    }
+
+    private MPVariable[] desempatarMaximizandoPrimeiroPeriodo(
+            List<PeriodoEscala> periodos,
+            List<PadraoEscala> padroes,
+            double zOtimo,
+            double infinito
+    ) {
+        if (periodos.isEmpty()) {
+            return new MPVariable[0];
+        }
+
+        MPSolver solver = MPSolver.createSolver("GLOP");
+
+        if (solver == null) {
+            return new MPVariable[0];
+        }
+
+        MPVariable[] variaveis = criarVariaveis(solver, padroes, infinito);
+
+        criarRestricoesCobertura(
+                solver,
+                periodos,
+                padroes,
+                variaveis,
+                infinito
+        );
+
+        MPConstraint totalOtimo = solver.makeConstraint(
+                zOtimo - EPSILON,
+                zOtimo + EPSILON,
+                "total_otimo"
+        );
+
+        for (MPVariable variavel : variaveis) {
+            totalOtimo.setCoefficient(variavel, 1.0);
+        }
+
+        MPObjective objetivo = solver.objective();
+
+        for (int indicePadrao = 0; indicePadrao < padroes.size(); indicePadrao++) {
+            int trabalha = padroes.get(indicePadrao)
+                    .trabalhaPorPeriodo()
+                    .get(0);
+            objetivo.setCoefficient(variaveis[indicePadrao], trabalha);
+        }
+
+        objetivo.setMaximization();
+
+        MPSolver.ResultStatus status = solver.solve();
+
+        if (status != MPSolver.ResultStatus.OPTIMAL) {
+            return new MPVariable[0];
+        }
+
+        return variaveis;
+    }
+
+    private double calcularZContinuo(MPVariable[] variaveis) {
+        double total = 0.0;
+
+        for (MPVariable variavel : variaveis) {
+            total += limparErroNumerico(variavel.solutionValue());
+        }
+
+        return limparErroNumerico(total);
     }
 
     private MPVariable[] criarVariaveis(

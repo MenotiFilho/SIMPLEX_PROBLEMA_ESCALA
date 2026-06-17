@@ -14,6 +14,7 @@ public class EscalaService {
 
     private final ValidadorCenarioService validadorCenarioService;
     private final GeradorPadroesService geradorPadroesService;
+    private final SolverEscalaService solverEscalaService;
     private final SolverEscalaInteiroService solverEscalaInteiroService;
 
     public List<PadraoEscala> preVisualizarPadroes(CenarioEscala cenario) {
@@ -33,6 +34,12 @@ public class EscalaService {
                 cenario.regraTrabalhoFolga()
         );
 
-       return solverEscalaInteiroService.resolver(cenario, padroes);
+       ResultadoOtimizacao relaxacaoContinua = solverEscalaService.resolver(cenario, padroes);
+
+       return solverEscalaInteiroService.resolver(
+               cenario,
+               padroes,
+               relaxacaoContinua.padroes()
+       );
     }
 }

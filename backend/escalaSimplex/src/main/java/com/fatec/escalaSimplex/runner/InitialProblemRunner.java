@@ -6,6 +6,7 @@ import com.fatec.escalaSimplex.domain.PeriodoEscala;
 import com.fatec.escalaSimplex.domain.RegraTrabalhoFolga;
 import com.fatec.escalaSimplex.domain.ResultadoOtimizacao;
 import com.fatec.escalaSimplex.service.EscalaService;
+import com.fatec.escalaSimplex.service.SolverEscalaService;
 import com.fatec.escalaSimplex.service.SolverEscalaInteiroService;
 import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.NonNull;
@@ -21,6 +22,7 @@ import java.util.List;
 public class InitialProblemRunner implements CommandLineRunner {
 
     private final EscalaService escalaService;
+    private final SolverEscalaService solverEscalaService;
     private final SolverEscalaInteiroService solverEscalaInteiroService;
 
     @Override
@@ -32,8 +34,12 @@ public class InitialProblemRunner implements CommandLineRunner {
 
         imprimirPadroes(padroes);
 
-        ResultadoOtimizacao resultadoContinuo = escalaService.resolver(cenario);
-        ResultadoOtimizacao resultadoInteiro = solverEscalaInteiroService.resolver(cenario, padroes);
+        ResultadoOtimizacao resultadoContinuo = solverEscalaService.resolver(cenario, padroes);
+        ResultadoOtimizacao resultadoInteiro = solverEscalaInteiroService.resolver(
+                cenario,
+                padroes,
+                resultadoContinuo.padroes()
+        );
 
         System.out.println("\n=== RESULTADO CONTÍNUO - SIMPLEX/GLOP ===");
         imprimirResultadoContinuo(resultadoContinuo);
@@ -74,6 +80,7 @@ public class InitialProblemRunner implements CommandLineRunner {
     private void imprimirResultadoContinuo(ResultadoOtimizacao resultado) {
         System.out.println("\nStatus: " + resultado.status());
 
+        System.out.println("Z contínuo: " + resultado.zContinuo());
         System.out.println("Z inteiro: " + resultado.zInteiro());
 
         System.out.println("\nQuantidade por padrão:");
@@ -107,6 +114,7 @@ public class InitialProblemRunner implements CommandLineRunner {
     private void imprimirResultadoInteiro(ResultadoOtimizacao resultado) {
         System.out.println("\nStatus: " + resultado.status());
 
+        System.out.println("Z contínuo: " + resultado.zContinuo());
         System.out.println("Z inteiro: " + resultado.zInteiro());
 
         System.out.println("\nQuantidade por padrão:");
