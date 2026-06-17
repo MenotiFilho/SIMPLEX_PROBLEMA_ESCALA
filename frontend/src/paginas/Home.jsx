@@ -35,18 +35,10 @@ export default function Home() {
         <div className="relative min-h-72 overflow-hidden rounded-2xl border border-blue-100 bg-slate-950 p-5 text-white shadow-2xl shadow-blue-900/20">
           <div className="absolute inset-0 bg-[linear-gradient(145deg,rgba(37,99,235,0.45),transparent_38%),radial-gradient(circle_at_78%_20%,rgba(125,211,252,0.35),transparent_28%)]" />
           <div className="relative flex h-full min-h-72 flex-col justify-between rounded-xl border border-white/10 bg-white/10 p-6 backdrop-blur-sm">
-            <div>
-              <p className="text-xs font-black uppercase tracking-[0.24em] text-blue-100">
-                Espaço para imagem
-              </p>
-              <p className="mt-3 max-w-xs text-sm leading-6 text-blue-50/80">
-                Depois você pode substituir este bloco por uma imagem do projeto, diagrama ou
-                captura da tela de resultados.
-              </p>
-            </div>
+          
 
             <div className="grid grid-cols-3 gap-3">
-              {[18, 12, 15].map((demanda, index) => (
+              {[18, 12, 15, 12 ,14,16].map((demanda, index) => (
                 <div key={demanda} className="rounded-lg border border-white/10 bg-white/10 p-3">
                   <p className="text-[10px] font-bold uppercase tracking-widest text-blue-100">
                     Turno {index + 1}

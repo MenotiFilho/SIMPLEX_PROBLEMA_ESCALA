@@ -109,7 +109,7 @@ export default function CenariosLista() {
               Cenários de escala
             </h1>
             <p className="mt-1 text-sm text-slate-600">
-              Gerencie os cenários salvos e resolva escalas persistidas no banco.
+              Gerencie os cenários salvos.
             </p>
           </div>
           <button
