@@ -9,7 +9,7 @@ function descreverRegra(cenario) {
     return '-';
   }
 
-  return `${regra.periodosTrabalhados} trabalho / ${regra.periodosFolga} folga${
+  return `${regra.periodosTrabalhados} turnos trabalho / ${regra.periodosFolga} turnos folga${
     regra.circular ? ' circular' : ''
   }`;
 }
@@ -154,7 +154,7 @@ export default function CenariosLista() {
                 <tr>
                   <th className="px-5 py-4 font-bold">Nome</th>
                   <th className="px-5 py-4 font-bold">Descrição</th>
-                  <th className="px-5 py-4 text-center font-bold">Períodos</th>
+                  <th className="px-5 py-4 text-center font-bold">Turnos</th>
                   <th className="px-5 py-4 font-bold">Regra</th>
                   <th className="px-5 py-4 text-right font-bold">Ações</th>
                 </tr>

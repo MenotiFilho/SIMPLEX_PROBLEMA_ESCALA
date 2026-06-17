@@ -1,6 +1,6 @@
 const PERIODOS_INICIAIS = [
-  { nome: 'Periodo 1', ordem: 1, demandaMinima: 0, ativo: true },
-  { nome: 'Periodo 2', ordem: 2, demandaMinima: 0, ativo: true },
+  { nome: 'Turno 1', ordem: 1, demandaMinima: 0, ativo: true },
+  { nome: 'Turno 2', ordem: 2, demandaMinima: 0, ativo: true },
 ];
 
 export function criarCenarioVazio(nome = '', descricao = '') {
@@ -24,7 +24,7 @@ export function normalizarCenario(cenario) {
       .sort((a, b) => a.ordem - b.ordem)
       .map((periodo, index) => ({
         id: periodo.id,
-        nome: periodo.nome?.trim() || `Periodo ${index + 1}`,
+        nome: periodo.nome?.trim() || `Turno ${index + 1}`,
         ordem: index + 1,
         demandaMinima: Number(periodo.demandaMinima) || 0,
         ativo: periodo.ativo ?? true,

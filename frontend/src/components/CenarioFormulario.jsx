@@ -84,7 +84,7 @@ export default function CenarioFormulario({
       periodos: [
         ...cenario.periodos,
         {
-          nome: `Período ${proximaOrdem}`,
+          nome: `Turno ${proximaOrdem}`,
           ordem: proximaOrdem,
           demandaMinima: 0,
           ativo: true,
@@ -140,7 +140,7 @@ export default function CenarioFormulario({
           <div className="grid grid-cols-1 gap-3 rounded-lg border border-blue-100 bg-blue-50/60 p-4 md:grid-cols-[1fr_1fr_auto] md:items-end">
             <div>
               <label className="mb-1 block text-xs font-bold uppercase tracking-wide text-blue-950">
-                Períodos trabalhados
+                Turnos trabalhados
               </label>
               <input
                 type="number"
@@ -154,7 +154,7 @@ export default function CenarioFormulario({
             </div>
             <div>
               <label className="mb-1 block text-xs font-bold uppercase tracking-wide text-blue-950">
-                Períodos de folga
+                Turnos de folga
               </label>
               <input
                 type="number"
@@ -176,8 +176,8 @@ export default function CenarioFormulario({
           </div>
           {regraMaiorQuePeriodos && (
             <p className="mt-2 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-sm font-semibold text-amber-800">
-              A soma de períodos trabalhados e folga ({totalRegra}) deve ser menor ou igual ao
-              total de períodos ({totalPeriodos}).
+              A soma de turnos trabalhados e folga ({totalRegra}) deve ser menor ou igual ao
+              total de turnos ({totalPeriodos}).
             </p>
           )}
         </section>
@@ -185,9 +185,9 @@ export default function CenarioFormulario({
         <section>
           <div className="mb-4 flex flex-col gap-3 border-b border-slate-200 pb-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h3 className="text-base font-bold text-slate-900">Períodos e demandas</h3>
+              <h3 className="text-base font-bold text-slate-900">Turnos e demandas</h3>
               <p className="mt-1 text-sm text-slate-500">
-                Nomeie cada período para representar escalas semanais, turnos ou ciclos como 12x36.
+                Nomeie cada turno para representar escalas semanais, jornadas ou ciclos como 12x36.
               </p>
             </div>
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
@@ -213,7 +213,7 @@ export default function CenarioFormulario({
                 onClick={adicionarPeriodo}
                 className="inline-flex items-center justify-center rounded-md border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-bold text-blue-700 transition hover:bg-blue-100"
               >
-                Adicionar período
+                Adicionar turno
               </button>
             </div>
           </div>
@@ -224,7 +224,7 @@ export default function CenarioFormulario({
                 <thead className="sticky top-0 z-10 border-b border-slate-200 bg-slate-50 text-xs uppercase tracking-wide text-slate-500">
                   <tr>
                     <th className="w-14 px-3 py-2 font-bold">#</th>
-                    <th className="px-3 py-2 font-bold">Período</th>
+                    <th className="px-3 py-2 font-bold">Turno</th>
                     <th className="w-36 px-3 py-2 text-center font-bold">Demanda</th>
                     <th className="w-24 px-3 py-2 text-right font-bold">Ações</th>
                   </tr>
@@ -241,7 +241,7 @@ export default function CenarioFormulario({
                           value={periodo.nome}
                           onChange={(event) => atualizarPeriodo(index, 'nome', event.target.value)}
                           className="w-full rounded-md border border-transparent bg-transparent px-2 py-1.5 font-semibold text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-300 focus:bg-white focus:ring-2 focus:ring-blue-100"
-                          placeholder={`Período ${index + 1}`}
+                          placeholder={`Turno ${index + 1}`}
                           required
                         />
                       </td>
