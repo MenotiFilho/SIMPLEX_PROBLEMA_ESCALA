@@ -207,9 +207,8 @@ export default function CenarioFormulario({
               total de turnos ({totalPeriodos}).
             </p>
           )}
-        </section>
 
-          <div className="mb-3 flex justify-end">
+           <div className="mb-3 flex justify-end">
             <button
               type="button"
               onClick={adicionarPeriodo}
@@ -218,6 +217,9 @@ export default function CenarioFormulario({
               Adicionar turno
             </button>
           </div>
+        </section>
+
+      
 
           <div className="overflow-hidden rounded-lg border border-slate-200">
             <div className="max-h-[420px] overflow-y-auto">
