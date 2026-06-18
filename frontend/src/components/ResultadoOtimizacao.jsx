@@ -94,7 +94,6 @@ function calcularSaldo(periodo) {
 
 export default function ResultadoOtimizacao({ resultado, cenario, aviso }) {
   const [mostrarNaoUtilizadas, setMostrarNaoUtilizadas] = useState(false);
-  const [visualizacaoCobertura, setVisualizacaoCobertura] = useState('tabela');
 
   if (!resultado) {
     return null;
@@ -254,73 +253,13 @@ export default function ResultadoOtimizacao({ resultado, cenario, aviso }) {
 
         {cobertura.length > 0 && (
           <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-            <div className="mb-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="mb-3">
               <h2 className="text-sm font-black uppercase tracking-wide text-blue-700">
                 Cobertura por período
               </h2>
-              <button
-                type="button"
-                onClick={() =>
-                  setVisualizacaoCobertura((atual) => (atual === 'tabela' ? 'cards' : 'tabela'))
-                }
-                className="inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-black text-slate-700 transition hover:border-blue-200 hover:bg-blue-50"
-              >
-                Alternar visão
-              </button>
             </div>
 
-            <div className={visualizacaoCobertura === 'cards' ? 'hidden' : ''}>
-              <div className="overflow-hidden rounded-xl border border-slate-200">
-                <table className="w-full border-separate border-spacing-0 bg-white text-sm">
-                  <thead className="bg-slate-50 text-slate-600">
-                    <tr>
-                      <th className="px-4 py-3 text-left font-black">Período</th>
-                      <th className="px-4 py-3 text-center font-black">Mínimo</th>
-                      <th className="px-4 py-3 text-center font-black">Alocado</th>
-                      <th className="px-4 py-3 text-center font-black">Saldo</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {cobertura.map((periodo, index) => {
-                      const alocado = periodo.atendidosAproximado ?? periodo.atendidosContinuo;
-                      const saldo = periodo.sobraAproximada ?? periodo.sobraContinua ?? calcularSaldo(periodo);
-                      const saldoPositivo = Number(saldo) > 0;
-
-                      return (
-                        <tr
-                          key={`${periodo.periodo}-${index}`}
-                          className="border-t border-slate-100 hover:bg-slate-50"
-                        >
-                          <td className="border-t border-slate-100 px-4 py-3 font-black text-slate-900">
-                            {periodo.periodo}
-                          </td>
-                          <td className="border-t border-slate-100 px-4 py-3 text-center font-semibold text-slate-600">
-                            {periodo.demandaMinima}
-                          </td>
-                          <td className="border-t border-slate-100 px-4 py-3 text-center font-black text-slate-800">
-                            {formatarNumero(alocado)}
-                          </td>
-                          <td
-                            className={`border-t border-slate-100 px-4 py-3 text-center font-black ${
-                              saldoPositivo ? 'text-green-700' : 'text-slate-700'
-                            }`}
-                          >
-                            {saldoPositivo ? '+' : ''}
-                            {formatarNumero(saldo)}
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            <div
-              className={`grid grid-cols-1 gap-3 sm:grid-cols-2 ${
-                visualizacaoCobertura === 'cards' ? '' : 'hidden'
-              }`}
-            >
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {cobertura.map((periodo, index) => {
                 const alocado = periodo.atendidosAproximado ?? periodo.atendidosContinuo;
                 const saldo = periodo.sobraAproximada ?? periodo.sobraContinua ?? calcularSaldo(periodo);
