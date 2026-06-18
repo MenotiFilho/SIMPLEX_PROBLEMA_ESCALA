@@ -135,7 +135,7 @@ export default function CenarioResultado() {
           </Link>
         </section>
       ) : (
-        <ResultadoOtimizacao resultado={resultado} />
+        <ResultadoOtimizacao resultado={resultado} cenario={cenario} />
       )}
     </div>
   );
