@@ -176,7 +176,7 @@ export default function ResultadoOtimizacao({ resultado, cenario, aviso }) {
                     key={`${padrao.variavel ?? padrao.nome}-${index}`}
                     className="grid overflow-hidden rounded-xl border border-slate-200 bg-white transition hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-lg hover:shadow-slate-200/70 sm:grid-cols-[8.75rem_1fr]"
                   >
-                    <div className="border-b border-slate-200 bg-gradient-to-b from-slate-50 to-white p-4 sm:border-b-0 sm:border-r">
+                    <div className="flex min-h-20 flex-col items-center justify-center border-b border-slate-200 bg-gradient-to-b from-slate-50 to-white p-4 text-center sm:border-b-0 sm:border-r">
                       <p className="text-5xl font-black leading-none text-blue-950">
                         {formatarNumero(padrao.quantidadeExibida)}
                       </p>
