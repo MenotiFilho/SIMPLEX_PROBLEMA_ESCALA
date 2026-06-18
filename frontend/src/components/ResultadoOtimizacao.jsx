@@ -151,7 +151,7 @@ export default function ResultadoOtimizacao({ resultado, cenario, aviso }) {
           <article className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
             <p className="text-xs font-black uppercase tracking-wide text-blue-700">Equipe mínima</p>
             <p className="mt-2 text-4xl font-black leading-none text-blue-950">
-              {formatarNumero(valorObjetivo, true)}
+              {formatarNumero(valorObjetivo)}
               <span className="ml-2 text-lg font-extrabold text-slate-600">funcionários</span>
             </p>
           </article>
@@ -178,7 +178,7 @@ export default function ResultadoOtimizacao({ resultado, cenario, aviso }) {
                   >
                     <div className="border-b border-slate-200 bg-gradient-to-b from-slate-50 to-white p-4 sm:border-b-0 sm:border-r">
                       <p className="text-5xl font-black leading-none text-blue-950">
-                        {formatarNumero(padrao.quantidadeExibida, true)}
+                        {formatarNumero(padrao.quantidadeExibida)}
                       </p>
                       <p className="mt-1 text-sm font-extrabold text-slate-700">funcionários</p>
                     </div>
@@ -298,7 +298,7 @@ export default function ResultadoOtimizacao({ resultado, cenario, aviso }) {
                             {periodo.demandaMinima}
                           </td>
                           <td className="border-t border-slate-100 px-4 py-3 text-center font-black text-slate-800">
-                            {formatarNumero(alocado, true)}
+                            {formatarNumero(alocado)}
                           </td>
                           <td
                             className={`border-t border-slate-100 px-4 py-3 text-center font-black ${
@@ -306,7 +306,7 @@ export default function ResultadoOtimizacao({ resultado, cenario, aviso }) {
                             }`}
                           >
                             {saldoPositivo ? '+' : ''}
-                            {formatarNumero(saldo, true)}
+                            {formatarNumero(saldo)}
                           </td>
                         </tr>
                       );
@@ -336,7 +336,7 @@ export default function ResultadoOtimizacao({ resultado, cenario, aviso }) {
                       Mínimo: {periodo.demandaMinima}
                     </p>
                     <p className="mt-1 text-sm font-semibold text-slate-600">
-                      Alocado: {formatarNumero(alocado, true)}
+                      Alocado: {formatarNumero(alocado)}
                     </p>
                     <p
                       className={`mt-2 text-sm font-black ${
@@ -344,7 +344,7 @@ export default function ResultadoOtimizacao({ resultado, cenario, aviso }) {
                       }`}
                     >
                       Saldo: {saldoPositivo ? '+' : ''}
-                      {formatarNumero(saldo, true)}
+                      {formatarNumero(saldo)}
                     </p>
                   </article>
                 );
